@@ -1,118 +1,155 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
+import {View, Text} from 'react-native';
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import Splash from './src/Home/Splash';
+import Login from './src/Home/Login';
+import SignUp from './src/Home/SignUp';
+import Profile from './src/Home/Profile';
+import HomeScreen from './src/Home/HomeScreen';
+import Setting from './src/Home/Setting';
+import Notification from './src/Home/Notification';
+import PostSecond from './src/Home/PostSecond';
+import Search from './src/Home/Search';
+import Post from './src/Home/Post';
+import ProfilePage from './src/Home/ProfilePage';
+import PostThird from './src/Home/PostThird';
+import EditProfile from './src/Home/EditProfile';
+import SearchOne from './src/Home/SearchOne';
+import SendOtpScreen from './src/Home/SendOtpScreen';
+import VerifyOtp from './src/Home/VerifyOtp';
+import UpdatePassword from './src/Home/UpdatePassword';
+import ResetPassword from './src/Home/ResetPassword';
+import CreatePost from './src/Home/CreatePost';
+import Header from './src/Home/Header';
+import HomeNavigatorRoutes from './src/Home/TabNavigator';
+import ContactList from './src/Home/ContactList';
+import ShowPost from './src/Home/ShowPost';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createStackNavigator();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Splash"
+          component={Splash}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HomeScreen"
+          component={HomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Setting"
+          component={Setting}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PostSecond"
+          component={PostSecond}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Search"
+          component={Search}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Post"
+          component={Post}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ProfilePage"
+          component={ProfilePage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PostThird"
+          component={PostThird}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SearchOne"
+          component={SearchOne}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SendOtpScreen"
+          component={SendOtpScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="VerifyOtp"
+          component={VerifyOtp}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UpdatePassword"
+          component={UpdatePassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="CreatePost"
+          component={CreatePost}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Header"
+          component={Header}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="HomeNavigatorRoutes"
+          component={HomeNavigatorRoutes}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ContactList"
+          component={ContactList}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ShowPost"
+          component={ShowPost}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
