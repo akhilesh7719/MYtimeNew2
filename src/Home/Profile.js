@@ -1,26 +1,29 @@
 import {
-  Animated,
-  Button,
   Image,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
+  Linking,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './Header';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Profile = ({navigation}) => {
+  const phoneNumber = '123-456-7890';
   const [location, setLocation] = useState('');
   const [token, setToken] = useState('');
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
   const [profileImg, setProfileImg] = useState('');
 
+  const handlePress = () => {
+    Linking.openURL(`tel:${phoneNumber}`).catch(err =>
+      console.error('Error opening phone dialer', err),
+    );
+  };
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
@@ -55,86 +58,12 @@ const Profile = ({navigation}) => {
       });
   };
 
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
   return (
     <SafeAreaView style={styles.container}>
-      <View
-      style={{
-        height: 40,
-        width: 410,
-        flexDirection: 'row',
-        alignSelf: 'center',
-      }}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={{
-          height: 40,
-          width: 40,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Image
-          style={{height: 18, width: 18}}
-          source={require('../assets/leftArrow.png')}
-        />
-      </TouchableOpacity>
-      <View
-        style={{
-          height: 40,
-          width: 120,
-
-          justifyContent: 'center',
-        }}>
-        <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
-          MyTime
-        </Text>
-      </View>
-      <View
-        style={{
-          height: 40,
-          width: 90,
-          flexDirection: 'row',
-          position: 'absolute',
-          right: 0,
-        }}>
-        <View
-          style={{
-            height: 40,
-            width: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{height: 18, width: 18}}
-            source={require('../assets/profile.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 40,
-            width: 30,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{height: 18, width: 18}}
-            source={require('../assets/bell.png')}
-          />
-        </View>
-        <View
-          style={{
-            height: 40,
-            width: 30,
-
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{height: 18, width: 18}}
-            source={require('../assets/setting.png')}
-          />
-        </View>
-      </View>
-    </View>
+      <Header onPress={() => handleGoBack()} />
       <View style={styles.headerTextViewStyle}>
         <View
           style={{
@@ -194,7 +123,9 @@ const Profile = ({navigation}) => {
                 source={require('../assets/contactwo.png')}
               />
             </View>
-            <Text style={styles.mainText}>contact me</Text>
+            <TouchableOpacity onPress={() => handlePress()}>
+              <Text style={styles.mainText}>contact me</Text>
+            </TouchableOpacity>
           </View>
           <View
             style={{
@@ -217,23 +148,6 @@ const Profile = ({navigation}) => {
             <Text style={styles.mainText}>Indore</Text>
           </View>
         </View>
-        {/* <View style={styles.iconTextIcon}>
-          <View style={styles.leftIcon}>
-            <Icon name="map-marker-alt" size={25} color="#C1C1C1" />
-          </View>
-          <View style={styles.textInput}>
-            <TextInput
-              style={styles.input}
-              placeholder="Add Your Location"
-              placeholderTextColor={'#C1C1C1'}
-              value={location}
-              onChangeText={text => setLocation(text)}
-            />
-          </View>
-          <View style={styles.rightIcon}>
-            <Icon name="map-marker" size={25} color="white" />
-          </View>
-        </View> */}
       </View>
     </SafeAreaView>
   );

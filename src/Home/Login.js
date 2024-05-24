@@ -109,7 +109,7 @@ const Login = ({navigation, route}) => {
         setNeTT(TToken);
         await AsyncStorage.setItem('TOKEN', TToken);
         //navigation.navigate('HomeNavigatorRoutes');
-        navigation.navigate('HomeNavigatorRoutes');
+        navigation.navigate('Profile');
       } else {
         const errorData = await response.json();
         console.error('Response error:', errorData);

@@ -20,6 +20,7 @@
     "fs": "^0.0.1-security",
     "react": "18.2.0",
     "react-native": "0.74.1",
+    "react-native-autolink": "^4.2.0",
     "react-native-gesture-handler": "^2.16.1",
     "react-native-image-crop-picker": "^0.41.1",
     "react-native-image-picker": "^7.1.2",
