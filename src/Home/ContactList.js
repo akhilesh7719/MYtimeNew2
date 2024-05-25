@@ -1,207 +1,120 @@
-import {
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React from 'react';
-import Header from './Header';
-const Data = [
-  {
-    id: '1',
-    name: 'Pawan architech',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '2',
-    name: 'Shivam Patel Colledge',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '3',
-    name: 'Abhinav Bags',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '4',
-    name: 'Adarsh',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '5',
-    name: 'Abhinav Jain Carry Bags',
-    // image: require('./src/Assests/contactProfilePic.png'),
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '6',
-    name: 'Shivani Jain',
-    text: 'Invite',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/747a/5d6b/0e52325c2669d80bf100b210469b2a50?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=UqdzA~gBjBzkbo5DI2C-Xx6ZLgmWO37YIJd1kN~sZ-j~a1M6KhgYBRAnamcj9aApbYRNKTqjN8S0GU4n8dEtecM86kzy7mXA5to7O~-iS-cNrySK2jklanuxfyAXRaWTMRd3fPWEVvxntbZEXYDzb75--XZLwvYKqi4Nx6R5iUYbjd5Vnww8le7-5lbPo20pP9QvYa99xjx2hv8xOkV8cUbIH1hLeoNGMDfLJ46anoTWYmHv-0k0mHRRls~1TIp~2LbzEWtyEYpJ0nzM7vMtmjcMmAcQtA8QLK6AEMNHps9jTy5OdOHtEc6I1Jn4OzEQPwus-wxNmImX3f8qhQL0vg__',
-    },
-  },
-  {
-    id: '9',
-    name: 'Praveen',
-    text: 'Invite',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '8',
-    name: 'Naman Sethi',
-    text: 'Invite',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-  {
-    id: '7',
-    name: 'Access',
-    text: 'Invite',
-    image: {
-      uri: 'https://s3-alpha-sig.figma.com/img/a08f/2ae1/77aad03c9519bb36e488b8dc473b29a9?Expires=1716163200&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=IY~nWZETPAIJBSFDqaQd7LAFIgHc1P9cm8PXBGsN5tQM47jNhjNasaOC1lvbX9nP49m0G19FfY5AZsPj4ZzINMeIv80TDnaFlqp5oajt~kV8a~VaJcUMEIw650rUpFvfyzNLlHqc9b5zIDTqXsgq9crhpsXEYIjTtPKh5-X-bKYqd5eWpV5E-FjpBfOYgwIhf0vfjtsqUMaQGeiSXLhHwPZdo9WALhYmHnN8tFyvHYdH6xC6oYWBCiy4W-4hrI06G1zkE85Bh0T9XWOxg~jFaiLWR90i1Dn5inHRvHOcSxUGb8iJ8y5LM87Gfl~WHi6Wh2LasjUuxqhrvNuqdXlbMQ__',
-    },
-  },
-];
-const Item = ({item}) => {
-  console.log(item);
-  return (
-    <View style={styles.contactListItemView}>
-      {/* <ScrollView horizontal={true}> */}
-      <View style={styles.contactListItemImageNameView}>
-        <View style={styles.contactListItemImageView}>
-          <Image style={styles.contactListItemImage} source={require('../assets/profile.png')} />
-        </View>
-        <View style={styles.contactListItemNameView}>
-          <Text style={styles.contactListItemName}>{item.name}</Text>
-        </View>
-      </View>
+import { View, Text, FlatList, PermissionsAndroid, StyleSheet, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import Contacts from 'react-native-contacts';
 
-      {item.text && (
-        <View style={styles.contactListItemTextView}>
-          <TouchableOpacity>
-            <Text style={styles.contactListItemText}>{item.text}</Text>
-          </TouchableOpacity>
+const ContactList = () => {
+  const [contacts, setContacts] = useState([]);
+
+  useEffect(() => {
+    ReadContactList();
+  }, []);
+
+  const ReadContactList = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+        {
+          title: 'Contacts',
+          message: 'This app would like to view your contacts.',
+          buttonPositive: 'Please accept bare mortal',
+        }
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        Contacts.getAll()
+          .then((contacts) => {
+            setContacts(contacts);
+            console.log("Contacts:", contacts);
+          })
+          .catch((err) => {
+            console.log("Error fetching contacts", err);
+          });
+      } else {
+        console.log("Permission denied");
+      }
+    } catch (err) {
+      console.log("Error requesting permission", err);
+    }
+  };
+
+  const renderContact = ({ item }) => (
+    <View style={styles.contactItem}>
+      {item.hasThumbnail ? (
+        <Image source={{ uri: item.thumbnailPath }} style={styles.contactImage} />
+      ) : (
+        <View style={styles.contactPlaceholder}>
+          <Text style={styles.contactInitials}>{item.givenName?.charAt(0)}{item.familyName?.charAt(0)}</Text>
         </View>
       )}
-      {/* </ScrollView> */}
-    </View>
-  );
-};
-const ContactList = () => {
-  return (
-    <View style={styles.MainContainerView}>
-      <View style={styles.contactListView}>
-        <FlatList
-          data={Data}
-          renderItem={({item}) => <Item item={item} />}
-          keyExtractor={item => item.id}
-        />
+      <View style={styles.contactInfo}>
+        <Text style={styles.contactName}>{item.displayName}</Text>
+        {/* {item.phoneNumbers.map((phone, index) => (
+          <Text key={index} style={styles.contactNumber}>{phone.number}</Text>
+        ))} */}
       </View>
     </View>
   );
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Contact List</Text>
+      <FlatList
+        data={contacts}
+        keyExtractor={(item) => item.recordID}
+        renderItem={renderContact}
+      />
+    </View>
+  );
 };
 
-export default ContactList;
-
 const styles = StyleSheet.create({
-  MainContainerView: {
-    //backgroundColor: 'white',
+  container: {
     flex: 1,
     padding: 10,
   },
-  headerContainerView: {
-    //  backgroundColor: 'green',
-
-    width: 62,
-    // flexDirection:'row',
-    justifyContent: 'center',
-    alignSelf: 'flex-end',
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
   },
-  headerIconsView: {
+  contactItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
+    marginBottom: 10,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
   },
-  contactListView: {
-    //  backgroundColor: 'green',
-    flex: 1,
-    marginTop: 70,
-    width: '100%',
-  },
-  contactListItemView: {
-    flexDirection: 'row',
-    marginTop: 15,
-    justifyContent: 'space-between',
-    //backgroundColor: 'grey',
-    width: '100%',
-  },
-  contactListItemImageNameView: {
-    flexDirection: 'row',
-    //backgroundColor: 'pink',
-    alignContent: 'flex-start',
-  },
-  contactListItemImageView: {
-    // backgroundColor: 'yellow',
-    height: 50,
+  contactImage: {
     width: 50,
-    borderRadius: 50,
+    height: 50,
+    borderRadius: 25,
+    marginRight: 10,
+  },
+  contactPlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#ccc',
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 10,
   },
-  contactListItemImage: {
-    height: 48,
-    width: 48,
-    borderRadius: 50,
-    lineHeight: 24,
-
-    // backgroundColor: 'yellow',
-    justifyContent: 'center',
-    alignItems: 'center',
+  contactInitials: {
+    fontSize: 18,
+    color: '#fff',
   },
-
-  contactListItemNameView: {
-    justifyContent: 'center',
-    // backgroundColor: 'orange',
-    alignItems: 'flex-start',
-    width: '65%',
-    paddingLeft: 10,
+  contactInfo: {
+    flex: 1,
   },
-  contactListItemName: {
-    fontWeight: '400',
+  contactName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  contactNumber: {
     fontSize: 16,
-    lineHeight: 24,
-    color: '#000000',
-  },
-  contactListItemTextView: {
-    backgroundColor: '#B9DDF3',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 100,
-    borderRadius: 10,
-    height: 40,
-    alignSelf: 'center',
-  },
-  contactListItemText: {
-    // backgroundColor: 'blue',
-    fontWeight: '400',
-    color: '#FFFFFF',
-    fontSize: 16,
-    lineHeight: 24,
   },
 });
+
+export default ContactList;
