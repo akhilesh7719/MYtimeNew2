@@ -13,7 +13,6 @@ const Tab = createBottomTabNavigator();
 const HomeNavigatorRoutes = props => {
   const [image, setImage] = useState('');
   const navigation = useNavigation();
-  
 
   const openGallery = () => {
     ImagePicker.openPicker({
