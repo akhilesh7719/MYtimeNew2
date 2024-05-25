@@ -53,7 +53,7 @@ const HomeScreen = () => {
   // };
 
   const productItem = item => {
-    console.log("@@@@@@@@@@@@HomeScreenItem======", item.user.id)
+    console.log("@@@@@@@@@@@@HomeScreenItem======", item)
     return (
       <View style={styles.ImageMainView}>
         <TouchableOpacity

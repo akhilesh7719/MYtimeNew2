@@ -44,7 +44,6 @@ const Profile = ({navigation, route}) => {
   }, [token, homeId]);
 
   const viewProfile = async tokens => {
-    console.log('@@@@@@@@@@temyyyyyyyy=========', homeId);
     const url = `https://api.mytime.co.in/users/${homeId}`;
     fetch(url, {
       method: 'GET',

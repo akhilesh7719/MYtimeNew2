@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {NavigationContainer} from '@react-navigation/native';
+
 import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import HomeScreen from './HomeScreen';
@@ -28,16 +30,13 @@ const HomeNavigatorRoutes = props => {
   };
 
   return (
+    
+
     <Tab.Navigator
       initialRouteName="HomeScreen"
       screenOptions={{
         tabBarActiveTintColor: '#e91e63',
-        tabBarStyle: {
-          height: 70,
-          borderRadius: 20,
-          marginHorizontal: 15,
-          bottom: 10,
-        },
+   
       }}>
       <Tab.Screen
         name="HomeScreen"
@@ -92,6 +91,7 @@ const HomeNavigatorRoutes = props => {
         }}
       />
     </Tab.Navigator>
+
   );
 };
 

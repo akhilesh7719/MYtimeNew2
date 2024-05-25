@@ -1,12 +1,26 @@
 import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Splash = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Login');
+      temp();
     }, 2000);
   }, []);
+
+  const temp = async () => {
+    let status = await AsyncStorage.getItem('TOKEN');
+    //let Tokenstatus = await AsyncStorage.getItem('Token');
+
+    console.log('Status', status);
+
+    if (status != null) {
+      navigation.navigate('HomeNavigatorRoutes');
+    } else {
+      navigation.navigate('Login');
+    }
+  };
   return (
     <View style={styles.container}>
       <Text style={styles.mytimeTextStyle}>MyTime</Text>
@@ -22,9 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  mytimeTextStyle:{
+  mytimeTextStyle: {
     fontSize: 30,
-    fontWeight:'bold',
-    
-  }
+    fontWeight: 'bold',
+  },
 });
