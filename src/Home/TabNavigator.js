@@ -13,19 +13,50 @@ import Profile from './Profile';
 const Tab = createBottomTabNavigator();
 
 const HomeNavigatorRoutes = props => {
-  const [image, setImage] = useState('');
+  const [image, setImage] = useState([]);
   const navigation = useNavigation();
-  
 
+  
+  // const openGallery = () => {
+  //   ImagePicker.openPicker({
+  //     multiple: true,
+  //     mediaType: 'any',
+  //   }).then(selectedMedia => {
+  //     console.log('Selected Media:', selectedMedia);
+  //     const images = [];
+  //     const videos = [];
+  
+  //     selectedMedia.forEach(media => {
+  //       if (media.mime && media.mime.startsWith('image')) {
+  //         images.push(media.path);
+  //       } else if (media.mime && media.mime.startsWith('video')) {
+  //         videos.push(media.path);
+  //       }
+  //     });
+  //     console.log("images",images,)
+  //     console.log("images, videos", videos)
+
+  //     // Send both images and videos to the next screen
+  //     navigation.navigate('PostThird', { images, videos }); 
+  //   }).catch(error => {
+  //     console.error('Error picking media:', error);
+  //   });
+  // };
   const openGallery = () => {
     ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-    }).then(image => {
-      console.log('@@@@@@@@@ImagePath=====', image);
-      setImage(image.path);
-      navigation.navigate('PostThird', {imagePath: image.path});
+      // width: 300,
+      // height: 300,
+      multiple: true,
+      // cropping: true,
+      mediaType: 'any',
+    }).then(selectedMedia => {
+      console.log('Selected Media:', selectedMedia.mime);
+      const mediaPaths = selectedMedia.map(media => media.path);
+
+      setImage(mediaPaths); 
+      navigation.navigate('PostThird', {mediaPaths}); 
+    }).catch(error => {
+      console.error('Error picking media:', error);
     });
   };
 

@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const CreatePost = () => {
   const [image, setImage] = useState('');
@@ -40,6 +41,7 @@ const CreatePost = () => {
     ImagePicker.openPicker({
       width: 300,
       height: 300,
+      multiple:true,
       cropping: true,
     }).then(image => {
       console.log(image);
@@ -50,6 +52,7 @@ const CreatePost = () => {
   const openCamera = () => {
     ImagePicker.openCamera({
       width: 300,
+      multiple:true,
       height: 300,
       cropping: true,
     }).then(image => {
@@ -60,13 +63,14 @@ const CreatePost = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={openGallery}>
+    <TouchableOpacity style={styles.button} onPress={openGallery}>
         <Text>open gallery</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => createPostApi()}>
         <Text>open camera</Text>
       </TouchableOpacity>
       <Image source={{uri: image}} width={350} height={400} />
+     
     </View>
   );
 };

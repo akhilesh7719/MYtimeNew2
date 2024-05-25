@@ -1,6 +1,9 @@
 import {View, Text, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
-const Header = ({onPress}) => {
+const Header = ({onPress, navigation}) => {
+  const handelSetting = ()=> {
+     navigation.navigate("Setting")
+  }
   return (
     <View
       style={{
@@ -67,7 +70,7 @@ const Header = ({onPress}) => {
             source={require('../assets/bell.png')}
           />
         </View>
-        <View
+        <TouchableOpacity onPress={()=> handelSetting()}
           style={{
             height: 40,
             width: 25,
@@ -78,7 +81,7 @@ const Header = ({onPress}) => {
             style={{height: 18, width: 18}}
             source={require('../assets/setting.png')}
           />
-        </View>
+        </TouchableOpacity>
       </View>
     </View>
   );

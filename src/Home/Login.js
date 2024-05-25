@@ -5,11 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
+  Alert
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import massaging from '@react-native-firebase/messaging';
+// import massaging from '@react-native-firebase/messaging';
 
 const Login = ({navigation, route}) => {
   const [mail, setMail] = useState('');
@@ -49,11 +50,11 @@ const Login = ({navigation, route}) => {
 
   useEffect(() => {
     getDeviceToken();
-  }, []);
+}, []);
 
   const getDeviceToken = async () => {
-    let token = await massaging().getToken();
-    console.log(token);
+    // let token = await massaging().getToken();
+    // console.log(token);
   };
 
   // const postLoginAPI = () => {
@@ -83,8 +84,8 @@ const Login = ({navigation, route}) => {
     const apiUrl = 'https://api.mytime.co.in/auth/login';
     const data = {
       data: {
-        // email: mail,
-        // password: password,
+        //email: mail,
+        //password: password,
         email: 'test666@gmail.com',
         password: 'Password@12345',
       },

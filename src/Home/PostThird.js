@@ -2,6 +2,7 @@ import {
   FlatList,
   Image,
   SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -14,22 +15,29 @@ import axios from 'axios';
 
 const PostThird = ({navigation, route}) => {
   const [token, setToken] = useState('');
-  const [imagePath, setImagePath] = useState('');
+  const [selectedButton, setSelectedButton] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const [imagePaths, setImagePaths] = useState([]);
   const [caption, setCaption] = useState('');
 
   useEffect(() => {
+    console.log("route.params?",route.params)
     getToken();
-    console.log('PostThirdProps=====', route.params.imagePath);
-    let imagePath = route.params.imagePath;
-    //let latestImage = imagePath.push(route.params.imagePath);
-    console.log('@@@@@@@@@@@@ImagePathLatest', imagePath);
-    setImagePath(imagePath);
-  }, []);
+    if (route.params?.mediaPaths) {
+      console.log('Received media paths:', route.params.mediaPaths);
+      setImagePaths(route.params.images);
+    }
+    // console.log('@@@@@@@@@@@@ImagePathLatest', imagePaths);
+    // setImagePath(imagePath);
+  }, [route.params]);
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
   };
+
+  
   // const createPostApi = async () => {
   //   const url = 'https://api.mytime.co.in/posts';
   //   const formData = new FormData();
@@ -49,14 +57,19 @@ const PostThird = ({navigation, route}) => {
   //     console.error('Error:==========', error);
   //   }
   // };
-
+  const handleButtonPress = (button) => {
+    setSelectedButton(button);
+  };
+  const handleSelect = (option) => {
+    setSelectedOption(option);
+  };
   const createPostApi = async () => {
     const url = 'https://api.mytime.co.in/posts';
     const formData = new FormData();
     formData.append('data[caption]', caption);
     formData.append('data[status]', 'universal');
     formData.append('data[images][]', {
-      uri: imagePath,
+      uri: imagePaths,
       type: 'image/jpeg',
       name: 'photo.jpg',
     });
@@ -86,6 +99,7 @@ const PostThird = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.Container}>
+    <ScrollView>
       <View style={styles.headerContainer}>
         <View>
           <Image
@@ -99,12 +113,24 @@ const PostThird = ({navigation, route}) => {
       </View>
 
       <View style={styles.mainContainer}>
-        <TouchableOpacity style={styles.ImageContainer}>
-          <Image
+        <ScrollView
+            horizontal={true} 
+      contentContainerStyle={styles.containerimage}
+      showsHorizontalScrollIndicator={false}
+        >
+      {imagePaths.map((path, index) => (
+        <Image
+          key={index}
+          source={{ uri: path }}
+          style={{height: 300, width: 350,margin:10,elevation:10,borderColor:'gray',
+    borderWidth:1,}}
+        />
+      ))}
+    </ScrollView>
+          {/* <Image
             style={{height: 300, width: 350}}
             source={require('../assets/lady.png')}
-          />
-        </TouchableOpacity>
+          /> */}
 
         <View style={styles.captionBox}>
           <TextInput
@@ -113,10 +139,54 @@ const PostThird = ({navigation, route}) => {
             placeholderTextColor="#9E9E9E"
             onChangeText={text => setCaption(text)}
             value={caption}
+            multiline={true}
           />
         </View>
-
-        <View style={styles.ButtonContainer}>
+      <View style={styles.ButtonContainer}>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedButton === 'Cakes' && styles.selectedButton,
+          ]}
+          onPress={() => handleButtonPress('Cakes')}
+        >
+          <Text style={[
+            styles.ButtonText,
+            selectedButton === 'Cakes' && styles.selectedButtonText,
+          ]}>
+            Cakes {selectedButton === 'Cakes' && '✓'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedButton === 'Rolls' && styles.selectedButton,
+          ]}
+          onPress={() => handleButtonPress('Rolls')}
+        >
+          <Text style={[
+            styles.ButtonText,
+            selectedButton === 'Rolls' && styles.selectedButtonText,
+          ]}>
+            Rolls {selectedButton === 'Rolls' && '✓'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.button,
+            selectedButton === 'Sandwich' && styles.selectedButton,
+          ]}
+          onPress={() => handleButtonPress('Sandwich')}
+        >
+          <Text style={[
+            styles.ButtonText,
+            selectedButton === 'Sandwich' && styles.selectedButtonText,
+          ]}>
+            Sandwich {selectedButton === 'Sandwich' && '✓'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+        {/* <View style={styles.ButtonContainer}>
           <TouchableOpacity style={styles.button}>
             <Text style={styles.ButtonText}>Cakes</Text>
           </TouchableOpacity>
@@ -126,28 +196,38 @@ const PostThird = ({navigation, route}) => {
           <TouchableOpacity style={styles.button}>
             <Text style={styles.ButtonText}>sandwitch</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         <View style={styles.lastContainer}>
           <View style={styles.showPostStyle}>
             <Text style={styles.showPostText}>Show Post To</Text>
           </View>
-
           <View style={styles.selectBox}>
-            <View style={styles.selectStyle}>
-              <View style={styles.checkBox}></View>
-              <Text style={styles.selectText}>
-                Public (recommended for businesses,professionals and creators)
-              </Text>
-            </View>
-            <View style={styles.selectStyle}>
-              <View style={styles.checkBox}></View>
-
-              <Text style={styles.selectText2}>
-                contacts (share only with contacts)
-              </Text>
-            </View>
-          </View>
+      <TouchableOpacity
+        style={styles.selectStyle}
+        onPress={() => handleSelect('Public')}
+      >
+        <View style={[styles.checkBox, selectedOption === 'Public' && styles.checkedBox]}>
+          {selectedOption === 'Public' && <Text style={styles.checkMark}>✓</Text>}
+        </View>
+        <Text style={styles.selectText}>
+          Public (recommended for businesses, professionals, and creators)
+        </Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity
+        style={styles.selectStyle}
+        onPress={() => handleSelect('Contacts')}
+      >
+        <View style={[styles.checkBox, selectedOption === 'Contacts' && styles.checkedBox]}>
+          {selectedOption === 'Contacts' && <Text style={styles.checkMark}>✓</Text>}
+        </View>
+        <Text style={styles.selectText2}>
+          Contacts (share only with contacts)
+        </Text>
+      </TouchableOpacity>
+    </View>
+         
         </View>
 
         <TouchableOpacity
@@ -156,6 +236,7 @@ const PostThird = ({navigation, route}) => {
           <Text style={styles.shareText}>Share</Text>
         </TouchableOpacity>
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -190,6 +271,7 @@ const styles = StyleSheet.create({
   mainContainer: {
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   ImageContainer: {
     marginTop: 40,
@@ -211,8 +293,9 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
     fontWeight: '400',
     fontSize: 16,
-    lineHeight: 24,
-    width: 139,
+    // lineHeight: 24,
+    // width: 200,
+    color:'#000',
     // backgroundColor:'green',
     padding: 10,
   },
@@ -312,5 +395,44 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 24,
     color: '#545454',
+  },
+  containerimage: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+
+  },
+  selectBox: {
+    padding: 20,
+  },
+  selectStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkBox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  checkedBox: {
+    backgroundColor: '#eee',
+    borderColor: '#eee',
+  },
+  checkMark: {
+    color: '#000',
+    fontSize: 14,
+  },
+  selectText: {
+    fontSize: 16,
+    color: '#000',
+  },
+  selectText2: {
+    fontSize: 16,
+    color: '#000',
   },
 });

@@ -12,7 +12,7 @@ import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeScreen = () => {
+const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
   const [postData, showPostData] = useState('');
   const [postImage, setPostImage] = useState('');
@@ -40,6 +40,9 @@ const HomeScreen = () => {
   useEffect(() => {
     getToken();
   }, []);
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
@@ -53,7 +56,7 @@ const HomeScreen = () => {
   // };
 
   const productItem = item => {
-    console.log("@@@@@@@@@@@@HomeScreenItem======", item)
+    console.log('@@@@@@@@@@@@HomeScreenItem======', item.user.id);
     return (
       <View style={styles.ImageMainView}>
         <TouchableOpacity
@@ -77,7 +80,6 @@ const HomeScreen = () => {
           style={{
             height: 35,
             width: 350,
-            //backgroundColor: 'green',
             justifyContent: 'center',
             alignItems: 'center',
             borderBottomWidth: 3,
@@ -103,6 +105,86 @@ const HomeScreen = () => {
 
   return (
     <SafeAreaView style={styles.MainContainerView}>
+      <View
+        style={{
+          height: 40,
+          width: 380,
+          flexDirection: 'row',
+          alignSelf: 'center',
+          // justifyContent:'center',
+          alignItems: 'center',
+        }}>
+        <TouchableOpacity
+          onPress={onPress}
+          style={{
+            height: 40,
+            width: 55,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Image
+            style={{height: 18, width: 22}}
+            source={require('../assets/leftArrow.png')}
+          />
+        </TouchableOpacity>
+        <View
+          style={{
+            height: 40,
+            width: 120,
+            justifyContent: 'center',
+          }}>
+          <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
+            MyTime
+          </Text>
+        </View>
+        <View
+          style={{
+            height: 40,
+            width: 90,
+            flexDirection: 'row',
+            position: 'absolute',
+            right: 0,
+            //backgroundColor:'red'
+          }}>
+          <View
+            style={{
+              height: 40,
+              width: 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/profile.png')}
+            />
+          </View>
+          <TouchableOpacity onPress={()=>navigation.navigate('Notification')}
+            style={{
+              height: 40,
+              width: 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/bell.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Setting')}
+            style={{
+              height: 40,
+              width: 25,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/setting.png')}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={{height: 60, width: 450}}>
         <ScrollView
           style={{flexGrow: 0}}
