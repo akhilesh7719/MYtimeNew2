@@ -52,11 +52,11 @@ const App = () => {
           component={Profile}
           options={{headerShown: false}}
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="HomeScreen"
           component={HomeScreen}
           options={{headerShown: false}}
-        />
+        /> */}
         <Stack.Screen
           name="Setting"
           component={Setting}

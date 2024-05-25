@@ -11,31 +11,41 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from './Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-const Profile = ({navigation}) => {
+const Profile = ({navigation, route}) => {
   const phoneNumber = '123-456-7890';
-  const [location, setLocation] = useState('');
   const [token, setToken] = useState('');
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
   const [profileImg, setProfileImg] = useState('');
+  const [homeId, setHomeId] = useState('');
 
   const handlePress = () => {
     Linking.openURL(`tel:${phoneNumber}`).catch(err =>
       console.error('Error opening phone dialer', err),
     );
   };
+
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
-    viewProfile(tokens);
   };
 
   useEffect(() => {
     getToken();
-  }, []);
+    if (route.params?.item?.user?.id) {
+      setHomeId(route.params.item.user.id);
+    }
+  }, [route.params]);
+
+  useEffect(() => {
+    if (token && homeId) {
+      viewProfile(token);
+    }
+  }, [token, homeId]);
 
   const viewProfile = async tokens => {
-    const url = 'https://api.mytime.co.in/users/1';
+    console.log('@@@@@@@@@@temyyyyyyyy=========', homeId);
+    const url = `https://api.mytime.co.in/users/${homeId}`;
     fetch(url, {
       method: 'GET',
       headers: {
@@ -45,7 +55,6 @@ const Profile = ({navigation}) => {
     })
       .then(resp => resp.json())
       .then(function (data) {
-        console.log('@@@@@@@@@@ ShowProfileApiData ========== ', data);
         let fullName = data.data.full_name;
         let aboutUs = data.data.about_us;
         let profilePic = data.data.profile_image.url;
@@ -61,6 +70,7 @@ const Profile = ({navigation}) => {
   const handleGoBack = () => {
     navigation.goBack();
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <Header onPress={() => handleGoBack()} />
@@ -99,7 +109,7 @@ const Profile = ({navigation}) => {
           <Image style={styles.profilePicImage} source={{uri: profileImg}} />
           <Text style={styles.profileAbout}>
             A Small Family Run Business Offering Freshly Mode Bread, Cokes,
-            Breakfast Rolls Sandwiches,Check My Page For Daily Updates. Serving
+            Breakfast Rolls Sandwiches, Check My Page For Daily Updates. Serving
             New Palasia Indore
           </Text>
         </View>
@@ -178,7 +188,6 @@ const styles = StyleSheet.create({
   },
   profilePic: {
     alignItems: 'center',
-
     height: 318,
     width: 351,
   },
@@ -202,7 +211,6 @@ const styles = StyleSheet.create({
     lineHeight: 19.5,
     color: '#FFFFFF',
   },
-
   iconTextIcon: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -227,7 +235,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     borderRadius: 20,
   },
-
   backIconButtonStyle: {
     height: 20,
     width: 20,

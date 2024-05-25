@@ -83,10 +83,10 @@ const Login = ({navigation, route}) => {
     const apiUrl = 'https://api.mytime.co.in/auth/login';
     const data = {
       data: {
-        //email: mail,
-        //password: password,
-        email: 'test666@gmail.com',
-        password: 'Password@12345',
+        email: mail,
+        password: password,
+        //email: 'test666@gmail.com',
+        //password: 'Password@12345',
       },
     };
 
@@ -109,7 +109,7 @@ const Login = ({navigation, route}) => {
         setNeTT(TToken);
         await AsyncStorage.setItem('TOKEN', TToken);
         //navigation.navigate('HomeNavigatorRoutes');
-        navigation.navigate('Profile');
+        navigation.navigate('HomeNavigatorRoutes');
       } else {
         const errorData = await response.json();
         console.error('Response error:', errorData);

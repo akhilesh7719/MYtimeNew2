@@ -78,7 +78,7 @@ const PostThird = ({navigation, route}) => {
       const data = await response.json();
       console.log('Response:=======', JSON.stringify(data));
       alert('Post created successfully');
-      navigation.navigate('ShowPost');
+      navigation.navigate('HomeScreen');
     } catch (error) {
       console.error('Error:==========', error);
     }
