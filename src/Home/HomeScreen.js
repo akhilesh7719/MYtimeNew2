@@ -16,6 +16,7 @@ const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
   const [postData, showPostData] = useState('');
   const [postImage, setPostImage] = useState('');
+  const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
 
   const getAllShowApiData = async tokens => {
@@ -55,6 +56,9 @@ const HomeScreen = ({onPress}) => {
   //   navigation.navigate('Profile');
   // };
 
+  const handleButtonPress = buttonName => {
+    setSelectedButton(buttonName);
+  };
   const productItem = item => {
     console.log('@@@@@@@@@@@@HomeScreenItem======', item.user.id);
     return (
@@ -186,21 +190,46 @@ const HomeScreen = ({onPress}) => {
         </View>
       </View>
       <View style={{height: 60, width: 450}}>
-        <ScrollView
-          style={{flexGrow: 0}}
-          showsVerticalScrollIndicator={false}
-          horizontal={true}>
-          <TouchableOpacity style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>For You</Text>
+        <ScrollView horizontal={true}>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedButton === 'button1'
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
+            onPress={() => handleButtonPress('button1')}>
+            <Text style={styles.buttonText}>For you</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>Entertainment</Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedButton === 'button2'
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
+            onPress={() => handleButtonPress('button2')}>
+            <Text style={styles.buttonText}>Entertainment</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>Today Event</Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedButton === 'button3'
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
+            onPress={() => handleButtonPress('button3')}>
+            <Text style={styles.buttonText}>Today’s events</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonStyle}>
-            <Text style={styles.buttonTextStyle}>Business</Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedButton === 'button4'
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
+            onPress={() => handleButtonPress('button4')}>
+            <Text style={styles.buttonText}>Business</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -296,5 +325,31 @@ const styles = StyleSheet.create({
   buttonTextStyle: {
     fontSize: 12,
     color: '#757876',
+  },
+  container: {
+    flex: 1,
+    marginTop: 50,
+  },
+  button: {
+    height: 32,
+    width: 91,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    marginLeft: 11,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeButton: {
+    backgroundColor: '#B8DCF4',
+  },
+  inactiveButton: {
+    backgroundColor: '#fff',
+  },
+  buttonText: {
+    color: '#545454',
+    fontWeight: '400',
+    fontSize: 10,
+    fontFamily: 'poppins',
   },
 });
