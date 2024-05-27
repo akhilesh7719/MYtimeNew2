@@ -13,7 +13,7 @@ import Profile from './Profile';
 const Tab = createBottomTabNavigator();
 
 const HomeNavigatorRoutes = props => {
-  const [image, setImage] = useState([]);
+  const [imagePaths, setImagePaths] = useState([]); 
   const navigation = useNavigation();
 
   
@@ -44,18 +44,22 @@ const HomeNavigatorRoutes = props => {
   // };
   const openGallery = () => {
     ImagePicker.openPicker({
-      // width: 300,
-      // height: 300,
       multiple: true,
-      // cropping: true,
       mediaType: 'any',
-    }).then(selectedMedia => {
-      console.log('Selected Media:', selectedMedia.mime);
-      const mediaPaths = selectedMedia.map(media => media.path);
+    })
+    .then(selectedMedia => {
+      console.log('Selected Media:', selectedMedia);
+      
+      // Check if selectedMedia is an array or a single object
+      const mediaPaths = Array.isArray(selectedMedia)
+        ? selectedMedia.map(media => media.path)
+        : [selectedMedia.path];
 
-      setImage(mediaPaths); 
-      navigation.navigate('PostThird', {mediaPaths}); 
-    }).catch(error => {
+      setImagePaths(mediaPaths);
+      console.log("mediaPaths@@@@",mediaPaths)
+      navigation.navigate('PostThird', { mediaPaths });
+    })
+    .catch(error => {
       console.error('Error picking media:', error);
     });
   };
