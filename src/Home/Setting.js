@@ -7,95 +7,66 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 
 const Setting = ({onPress}) => {
+  const [token, setToken] = useState('');
   const navigation = useNavigation();
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const getToken = async () => {
+    const tokens = await AsyncStorage.getItem('TOKEN');
+    console.log('@@@@@@@@@@ delete Token ============', tokens);
+    setToken(tokens);
+  };
+
+  const deleteUserApi = async () => {
+    try {
+      const token = await AsyncStorage.getItem('TOKEN');
+      const url = 'https://api.mytime.co.in/users/1';
+
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          token: token,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      console.log('Request Headers:', JSON.stringify(response.headers));
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Network response was not ok: ${response.status} - ${errorData.message}`,
+        );
+      }
+
+      const data = await response.json();
+      console.log('@@@@@@@@@@ delete ============== ', data);
+      alert(`${data.message}`); // Show success message
+    } catch (error) {
+      console.error('Error:', error);
+      alert(`${error.message}`); // Show error message
+    }
+  };
+
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          height: 40,
-          width: 380,
-          flexDirection: 'row',
-          alignSelf: 'center',
-          // justifyContent:'center',
-          alignItems: 'center',
-        }}>
-        <TouchableOpacity
-          onPress={onPress}
-          style={{
-            height: 40,
-            width: 55,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Image
-            style={{height: 18, width: 22}}
-            source={require('../assets/leftArrow.png')}
-          />
-        </TouchableOpacity>
-        <View
-          style={{
-            height: 40,
-            width: 120,
-            justifyContent: 'center',
-          }}>
-          <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
-            MyTime
-          </Text>
-        </View>
-        <View
-          style={{
-            height: 40,
-            width: 90,
-            flexDirection: 'row',
-            position: 'absolute',
-            right: 0,
-            //backgroundColor:'red'
-          }}>
-          <View
-            style={{
-              height: 40,
-              width: 25,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{height: 18, width: 18}}
-              source={require('../assets/profile.png')}
-            />
-          </View>
-          <View
-            style={{
-              height: 40,
-              width: 25,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{height: 18, width: 18}}
-              source={require('../assets/bell.png')}
-            />
-          </View>
-          <TouchableOpacity
-            onPress={() => handelSetting()}
-            style={{
-              height: 40,
-              width: 25,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Image
-              style={{height: 18, width: 18}}
-              source={require('../assets/setting.png')}
-            />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <TouchableOpacity onPress={()=> navigation.goBack()}
+      style={styles.cross}>
+      <Image  style={{height:15, width:15}}
+      source={require('../assets/cross.png')}/>
+      </TouchableOpacity>
       <View style={styles.settingViewStyle}>
         <Text style={styles.settingTextStyle}>Settings</Text>
       </View>
@@ -151,32 +122,34 @@ const Setting = ({onPress}) => {
           </View>
         </View>
         <View style={styles.bottomButtonViewStyle}>
-          <TouchableOpacity style={styles.deleteButtonStyle}>
+          <TouchableOpacity
+            onPress={() => deleteUserApi()}
+            style={styles.deleteButtonStyle}>
             <Text style={styles.deleteTextStyle}>Delete</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
-            Alert.alert(
-              'Logout',
-              'Are you sure? You want to logout?',
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => {
-                    return null;
+              Alert.alert(
+                'Logout',
+                'Are you sure? You want to logout?',
+                [
+                  {
+                    text: 'Cancel',
+                    onPress: () => {
+                      return null;
+                    },
                   },
-                },
-                {
-                  text: 'Confirm',
-                  onPress: async () => {
-                    await AsyncStorage.removeItem('TOKEN');
-                  navigation.replace('Login');
+                  {
+                    text: 'Confirm',
+                    onPress: async () => {
+                      await AsyncStorage.removeItem('TOKEN');
+                      navigation.replace('Login');
+                    },
                   },
-                },
-              ],
-              {cancelable: false},
-            );
-          }}            
+                ],
+                {cancelable: false},
+              );
+            }}
             style={styles.deleteButtonStyle}>
             <Text style={styles.deleteTextStyle}>Sign Out</Text>
           </TouchableOpacity>
@@ -197,7 +170,7 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: 'center',
     marginLeft: 29,
-    marginTop: 70,
+    //marginTop: 20,
   },
   settingTextStyle: {
     fontSize: 15,
@@ -295,4 +268,13 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
     lineHeight: 22.5,
   },
+  cross: {
+    //backgroundColor:'green',
+   width: 30,
+   height: 22,
+   alignSelf: 'flex-end',
+   justifyContent: 'center',
+   alignItems:'center',
+   marginRight: 20
+ },
 });

@@ -1,6 +1,14 @@
-import {FlatList, StyleSheet, Switch, Text, View,SafeAreaView} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  Switch,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome5';
 
 const Data = [
   {
@@ -50,22 +58,19 @@ const Item = ({item}) => {
     </View>
   );
 };
-const Notification = () => {
+const Notification = ({navigation}) => {
   return (
     <SafeAreaView style={styles.view}>
-      <View style={styles.cross}>
-        <Icon
-          style={styles.crossIconStyle}
-          name="times-circle"
-          size={22}
-          color="#000000"
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.cross}>
+        <Image
+          style={{height: 15, width: 15}}
+          source={require('../assets/cross.png')}
         />
-      </View>
+      </TouchableOpacity>
       <View style={styles.notificationTextButtonView}>
         <Text style={styles.notificationTextViewStyle}>Notification</Text>
-        <Switch
-          trackColor={{false: '#D9D9D9', true: '#D9D9D9'}}
-          style={styles.notificationSwitchViewStyle}></Switch>
       </View>
       <View style={styles.notificationView}>
         <FlatList
@@ -87,11 +92,13 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   cross: {
-    //  backgroundColor:'green',
-    width: 310,
+    //backgroundColor:'green',
+    width: 30,
     height: 22,
-    alignSelf: 'center',
+    alignSelf: 'flex-end',
     justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
   },
   crossIconStyle: {
     alignSelf: 'flex-end',
