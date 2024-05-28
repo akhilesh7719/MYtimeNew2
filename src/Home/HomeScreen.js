@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
@@ -31,8 +32,10 @@ const HomeScreen = ({onPress}) => {
     })
       .then(resp => resp.json())
       .then(function (data) {
-        console.log('@@@@@@@@@@ ApiData ============== ', data);
-        showPostData(data.data);
+        console.log('@@@@@@@@@@ ApiData ==============', resp);
+        showPostData(data.user);
+        console.log('@@@@@@@@@@ dataaaaa ==============', postData);
+
       })
       .catch(function (error) {
         console.log(error);
@@ -53,24 +56,21 @@ const HomeScreen = ({onPress}) => {
     getAllShowApiData(tokens);
   };
 
-  // const profileNNabigatttion = () => {
-  //   navigation.navigate('Profile');
-  // };
-
   const handleButtonPress = buttonName => {
     setSelectedButton(buttonName);
   };
+
   const productItem = item => {
-    console.log('@@@@@@@@@@@@HomeScreenItem======', item.user.id);
+    console.log('@@@@@@@@@@@@HomeScreenItem======', item);
     return (
       <View style={styles.ImageMainView}>
         <TouchableOpacity
           style={{
             height: 35,
             width: 150,
-            //backgroundColor: 'green',
+            backgroundColor: 'green',
             justifyContent: 'center',
-            //alignItems: 'center',
+            alignItems: 'center',
           }}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
         </TouchableOpacity>
@@ -112,14 +112,14 @@ const HomeScreen = ({onPress}) => {
     <SafeAreaView style={styles.MainContainerView}>
       <View style={styles.headerMainViewStyle}>
         <View style={styles.headerLeftMainViewStyle}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => handleGoBack()}
             style={styles.leftArrowButtonStyle}>
             <Image
               style={{height: 18, width: 22}}
               source={require('../assets/leftArrow.png')}
             />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <View style={styles.mytimeViewStyle}>
             <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
               MyTime
@@ -211,6 +211,7 @@ const HomeScreen = ({onPress}) => {
           </TouchableOpacity>
         </ScrollView>
       </View>
+
       <View style={styles.contactListView}>
         <FlatList
           data={postData}
@@ -331,7 +332,7 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
   },
   headerMainViewStyle: {
-    height: 60,
+    height: 50,
     width: 352,
     //backgroundColor: 'red',
     alignSelf: 'center',

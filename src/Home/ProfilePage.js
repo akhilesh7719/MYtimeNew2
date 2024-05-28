@@ -29,7 +29,7 @@ const ProfilePage = ({navigation, route}) => {
   };
 
   const handleEditProfileApi = async () => {
-    const url = 'https://api.mytime.co.in/users/1'; 
+    const url = 'https://api.mytime.co.in/users/1';
     const formData = new FormData();
     formData.append('data[full_name]', fullName);
     formData.append('data[about_us]', aboutUs);
@@ -39,7 +39,7 @@ const ProfilePage = ({navigation, route}) => {
       const response = await axios.patch(url, formData, {
         headers: {
           token: token,
-          'Content-Type': 'multipart/form-data', 
+          'Content-Type': 'multipart/form-data',
         },
       });
       console.log('Response:=======', JSON.stringify(response));
@@ -68,14 +68,15 @@ const ProfilePage = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profilePicViewMainStyle}>
-        <View
-          style={styles.profilePicViewInnerStyle}>
+        <View style={styles.profilePicViewInnerStyle}>
           <Image
-            source={ image? {uri: image}:require('../assets/profile.png') }
+            source={image ? {uri: image} : require('../assets/profile.png')}
             style={{height: 135, width: 135, borderRadius: 100}}
           />
         </View>
-        <TouchableOpacity onPress={() => openGallery()} style={styles.plusViewStyle}>
+        <TouchableOpacity
+          onPress={() => openGallery()}
+          style={styles.plusViewStyle}>
           <Image
             source={require('../assets/plusProfile.png')}
             style={{height: 25, width: 25}}
@@ -85,7 +86,7 @@ const ProfilePage = ({navigation, route}) => {
       <View style={styles.fullNameViewStyle}>
         <TextInput
           style={styles.fullNameInputStyle}
-          placeholder={"Full Name"}
+          placeholder={'Full Name'}
           placeholderTextColor="#515151"
           onChangeText={text => setFullName(text)}
           value={fullName}
@@ -103,6 +104,7 @@ const ProfilePage = ({navigation, route}) => {
           style={styles.aboutInputStyle}
           placeholder={'About Us'}
           placeholderTextColor="#515151"
+          multiline={true}
           onChangeText={text => setAboutUs(text)}
           value={aboutUs}
         />
@@ -191,11 +193,11 @@ const styles = StyleSheet.create({
     borderColor: '#D3CFCF',
   },
   aboutInputStyle: {
-    height: 50,
-    width: 300,
+    height: 90,
+    width: 280,
     //backgroundColor: 'pink',
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    //justifyContent: 'center',
+    //alignItems: 'center',
     marginLeft: 20,
   },
   nextButtonStyle: {
