@@ -11,6 +11,7 @@ import {
 import React, {useState, useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {TextInput} from 'react-native-gesture-handler';
 
 const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
@@ -152,7 +153,21 @@ const HomeScreen = ({onPress}) => {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={{height: 60, width: 450}}>
+      <View style={styles.serchMainViewStyle}>
+        <View style={styles.serchIconViewStyle}>
+          <Image
+            style={{height: 14, width: 12}}
+            source={require('../assets/search.png')}
+          />
+        </View>
+        <View style={styles.textInputViewStyle}>
+          <TextInput
+            style={styles.textInputStyle}
+            placeholder="makeup artist , yoga instructor near me "
+          />
+        </View>
+      </View>
+      <View style={{height: 45, width: '100%', marginTop: 10}}>
         <ScrollView horizontal={true}>
           <TouchableOpacity
             style={[
@@ -357,5 +372,32 @@ const styles = StyleSheet.create({
     //backgroundColor: 'yellow',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  serchMainViewStyle: {
+    height: 40,
+    width: 350,
+    //backgroundColor: 'red',
+    alignSelf: 'center',
+    flexDirection: 'row',
+    borderBottomColor: 'gray',
+    borderBottomWidth: 1,
+  },
+  serchIconViewStyle: {
+    height: 40,
+    width: 40,
+    //backgroundColor: 'green',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  textInputViewStyle: {
+    height: 40,
+    width: 240,
+    //backgroundColor: 'blue',
+    justifyContent: 'center',
+  },
+  textInputStyle: {
+    height: 40,
+    width: 270,
+    //backgroundColor: 'pink',
   },
 });
