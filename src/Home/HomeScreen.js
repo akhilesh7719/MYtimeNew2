@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   View,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
@@ -17,10 +18,12 @@ const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
   const [postData, showPostData] = useState('');
   const [postImage, setPostImage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
 
   const getAllShowApiData = async tokens => {
+    setLoading(true);
     const url = 'https://api.mytime.co.in/posts';
     fetch(url, {
       method: 'GET',
@@ -39,7 +42,8 @@ const HomeScreen = ({onPress}) => {
       })
       .catch(function (error) {
         console.log(error);
-      });
+      })
+      .finally(() => setLoading(false)); 
   };
 
   useEffect(() => {
@@ -48,7 +52,6 @@ const HomeScreen = ({onPress}) => {
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
-    console.log('@@@@@@@@@@ ShowPost Token ============', tokens);
     setToken(tokens);
     getAllShowApiData(tokens);
   };
@@ -82,14 +85,7 @@ const HomeScreen = ({onPress}) => {
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('Profile', {item: item})}
-          style={{
-            height: 35,
-            width: 350,
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderBottomWidth: 3,
-            borderColor: 'black',
-          }}>
+          style={styles.viewProfileContainerStyle}>
           <Text style={styles.contactListItemText}>View Profile</Text>
         </TouchableOpacity>
         <View
@@ -211,6 +207,11 @@ const HomeScreen = ({onPress}) => {
           keyExtractor={item => item.id}
         />
       </View>
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#B8DCF4" />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -318,5 +319,22 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 10,
     fontFamily: 'poppins',
+  },
+  viewProfileContainerStyle: {
+    height: 35,
+    width: 350,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderBottomWidth: 3,
+    borderColor: 'black',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });

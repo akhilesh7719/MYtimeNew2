@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   TextInput,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -19,6 +20,7 @@ const ProfilePage = ({navigation, route}) => {
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
   const [userId, setUserId] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getToken();
@@ -32,6 +34,7 @@ const ProfilePage = ({navigation, route}) => {
   };
 
   const handleEditProfileApi = async () => {
+    setLoading(true);
     const url = `https://api.mytime.co.in/users/${userId}`;
     const formData = new FormData();
     formData.append('data[full_name]', fullName);
@@ -49,6 +52,8 @@ const ProfilePage = ({navigation, route}) => {
       navigation.navigate('HomeScreen');
     } catch (error) {
       console.error('Error:==========', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -117,6 +122,11 @@ const ProfilePage = ({navigation, route}) => {
         style={styles.nextButtonStyle}>
         <Text style={styles.nextTextStyle}>Next</Text>
       </TouchableOpacity>
+      {loading && (
+        <View style={styles.loading}>
+          <ActivityIndicator size="large" color="#B8DCF4" />
+        </View>
+      )}
     </SafeAreaView>
   );
 };
@@ -133,13 +143,7 @@ const styles = StyleSheet.create({
     height: 120,
     width: 350,
     marginLeft: 15,
-    //alignItems: 'center',
     justifyContent: 'center',
-    //borderRadius: 100,
-    // borderWidth: 2,
-    // borderColor: 'gray',
-    // flexDirection:'row'
-    //backgroundColor:'red'
   },
   profilePicViewInnerStyle: {
     height: 110,
@@ -164,7 +168,6 @@ const styles = StyleSheet.create({
     width: 350,
     marginLeft: 15,
     marginTop: 40,
-    // backgroundColor: 'green',
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 20,
@@ -174,7 +177,6 @@ const styles = StyleSheet.create({
   fullNameInputStyle: {
     height: 50,
     width: 260,
-    // backgroundColor: 'pink',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 20,
@@ -182,7 +184,6 @@ const styles = StyleSheet.create({
   editIconViewStyle: {
     height: 50,
     width: 50,
-    // backgroundColor: 'pink',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -198,9 +199,6 @@ const styles = StyleSheet.create({
   aboutInputStyle: {
     height: 90,
     width: 280,
-    //backgroundColor: 'pink',
-    //justifyContent: 'center',
-    //alignItems: 'center',
     marginLeft: 20,
   },
   nextButtonStyle: {
@@ -213,11 +211,17 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginTop: 70,
   },
-  deleteTextStyle: {
-    fontSize: 12,
-    color: '#000000',
-    fontWeight: '500',
-    fontFamily: 'poppins',
-    lineHeight: 22.5,
+  nextTextStyle: {
+    fontSize: 16,
+    color: '#000',
+  },
+  loading: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
