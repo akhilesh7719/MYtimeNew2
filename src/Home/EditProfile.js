@@ -1,11 +1,18 @@
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 import axios from 'axios';
 
-const EditProfile = () => {
+const EditProfile = ({navigation}) => {
   const [token, setToken] = useState('');
   const [image, setImage] = useState('');
   const [name, setName] = useState('');
@@ -20,6 +27,9 @@ const EditProfile = () => {
   useEffect(() => {
     getToken();
   }, []);
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
   const handleEditProfileApi = async () => {
     const url = 'https://api.mytime.co.in/users/1'; // Replace with your API endpoint
@@ -38,7 +48,7 @@ const EditProfile = () => {
       });
 
       //const result = await response;
-      console.log('Response:=======',JSON.stringify(response));
+      console.log('Response:=======', JSON.stringify(response));
     } catch (error) {
       console.error('Error:==========', error);
     }
@@ -73,47 +83,58 @@ const EditProfile = () => {
     });
   };
   return (
-    <View style={styles.mainContainerView}>
-      <View style={styles.headerContainerView}>
-        <View style={styles.headerIconsView}>
-          <TouchableOpacity>
-            <Icon
-              style={styles.profileIcon}
-              name="user-alt"
-              size={15}
-              color="#000000"
+    <SafeAreaView style={styles.mainContainerView}>
+      <View style={styles.headerMainViewStyle}>
+        <View style={styles.headerLeftMainViewStyle}>
+          <TouchableOpacity
+            onPress={() => handleGoBack()}
+            style={styles.leftArrowButtonStyle}>
+            <Image
+              style={{height: 18, width: 22}}
+              source={require('../assets/leftArrow.png')}
             />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="bell" size={25} color="#000000" />
+          <View style={styles.mytimeViewStyle}>
+            <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
+              MyTime
+            </Text>
+          </View>
+        </View>
+        <View style={styles.rightSideIconMainViewStyle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ProfilePage')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/profile.png')}
+            />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="cog" size={25} color="#000000" />
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Notification')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/bell.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Setting')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 15, width: 15}}
+              source={require('../assets/setting.png')}
+            />
           </TouchableOpacity>
         </View>
       </View>
+
       <View style={styles.secondContainerNameLocView}>
         <View style={styles.nameLocView}>
           <Text style={styles.profileName}>Full Name</Text>
-          <View style={styles.iconLoc}>
-            <Icon
-              style={styles.locIcon}
-              name="map-marker-alt"
-              size={20}
-              color="#C1C1C1"
-            />
-            <Text style={styles.locName}>Indore</Text>
-          </View>
         </View>
         <View style={styles.profilePicTextView}>
           <View style={styles.profilePicImageView}>
             {/* <Image
-              style={styles.profilePicImage}
-              source={{
-                uri: 'https://img.freepik.com/free-photo/cheerful-indian-businessman-smiling-closeup-portrait-jobs-career-campaign_53876-129417.jpg?t=st=1714731969~exp=1714735569~hmac=2a477c9bd95a4b6844fae745b472c7b0c973ae532cdd9d60c25c69c6da8e3b09&w=900',
-              }}
-            /> */}
-            <Image
               source={
                 {uri: image}
                   ? {uri: null}
@@ -123,24 +144,39 @@ const EditProfile = () => {
               }
               width={400}
               height={240}
+            /> */}
+            <Image
+              style={{height: 243, width: 350}}
+              source={require('../assets/maleImg.png')}
             />
           </View>
           <View style={styles.profilePicIconView}>
             <View style={styles.profilePicIcon}>
-              <TouchableOpacity onPress={() => openGallery()}>
-                <Icon
-                  style={styles.picType1Icon}
-                  name="edit"
-                  size={20.12}
-                  color="#756E6E"
+              <TouchableOpacity
+                style={{
+                  //backgroundColor: 'red',
+                  height: 30,
+                  width: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => navigation.navigate('ProfilePage')}>
+                <Image
+                  style={{height: 18, width: 18}}
+                  source={require('../assets/editIcon.png')}
                 />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Icon
-                  style={styles.picType1Icon}
-                  name="trash-alt"
-                  size={20.12}
-                  color="#756E6E"
+              <TouchableOpacity
+                style={{
+                  //backgroundColor: 'red',
+                  height: 30,
+                  width: 30,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image
+                  style={{height: 18, width: 18}}
+                  source={require('../assets/delete.png')}
                 />
               </TouchableOpacity>
             </View>
@@ -153,24 +189,22 @@ const EditProfile = () => {
             </Text>
           </View>
         </View>
-        <View style={styles.recentsPics}>
-          <View style={styles.recentPicsEditView}>
-            <Image style={styles.picType1} />
-            <TouchableOpacity>
-              <View style={styles.picType1IconView}>
-                <Icon
-                  style={styles.picType1Icon}
-                  name="edit"
-                  size={20.12}
-                  color="#756E6E"
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-          <Image style={styles.picType1} />
-          <Image style={styles.picType2} />
+
+        <View
+          style={{
+            height: 150,
+            width: 352,
+            //backgroundColor: 'blue',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10
+          }}>
+          <View
+            style={{height: 150, width: 170, backgroundColor: 'gray'}}></View>
+          <View
+            style={{height: 150, width: 170, backgroundColor: 'gray'}}></View>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => handleEditProfileApi()}
           style={{
             height: 50,
@@ -181,9 +215,9 @@ const EditProfile = () => {
             marginTop: 20,
           }}>
           <Text>Save</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -214,15 +248,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    //backgroundColor: 'green',
   },
   nameLocView: {
+    //backgroundColor: 'grey',
     width: '100%',
-    // backgroundColor: 'grey',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginVertical: 10,
+    marginLeft: 40,
   },
   iconLoc: {
     flexDirection: 'row',
@@ -261,16 +292,11 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   profilePicIconView: {
-    // backgroundColor: 'green',
-    flexDirection: 'row',
-    color: '#756E6E',
-    padding: 5,
-    width: '100%',
     position: 'absolute',
-    alignSelf: 'flex-start',
+    right: 20,
   },
   profilePicIcon: {
-    // backgroundColor: 'yellow',
+    //backgroundColor: 'yellow',
     flexDirection: 'row',
     width: '100%',
     alignItems: 'flex-end',
@@ -290,10 +316,10 @@ const styles = StyleSheet.create({
     height: 243,
   },
   profileAboutView: {
-    //  backgroundColor: 'green',
-    alignSelf: 'center',
-    width: '100%',
-    // height: 98,
+    //backgroundColor: 'green',
+    //alignSelf: 'center',
+    width: 350,
+    height: 70,
     position: 'absolute',
     justifyContent: 'center',
     alignSelf: 'flex-end',
@@ -355,5 +381,50 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 70,
     backgroundColor: '#D9D9D9',
+  },
+  
+  headerMainViewStyle: 
+  {
+    height: 50,
+    width: 352,
+    //backgroundColor: 'green',
+    alignSelf: 'center',
+    flexDirection: 'row',
+  },
+  headerLeftMainViewStyle: {
+    height: 50,
+    width: 150,
+    //backgroundColor: 'green',
+    flexDirection: 'row',
+  },
+  leftArrowButtonStyle: {
+    height: 50,
+    width: 50,
+    //backgroundColor: 'yellow',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mytimeViewStyle: {
+    height: 50,
+    width: 90,
+    //backgroundColor: 'pink',
+    justifyContent: 'center',
+  },
+  rightSideIconMainViewStyle: {
+    height: 50,
+    width: 150,
+    //backgroundColor: 'pink',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 0,
+    flexDirection: 'row',
+  },
+  rightSideButtonStyle: {
+    height: 30,
+    width: 30,
+    //backgroundColor: 'yellow',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

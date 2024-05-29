@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Header from './Header';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 const Profile = ({navigation, route}) => {
@@ -73,7 +72,49 @@ const Profile = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header onPress={() => handleGoBack()} />
+      <View style={styles.headerMainViewStyle}>
+        <View style={styles.headerLeftMainViewStyle}>
+          <TouchableOpacity
+            onPress={() => handleGoBack()}
+            style={styles.leftArrowButtonStyle}>
+            <Image
+              style={{height: 18, width: 22}}
+              source={require('../assets/leftArrow.png')}
+            />
+          </TouchableOpacity>
+          <View style={styles.mytimeViewStyle}>
+            <Text style={{fontSize: 15, fontWeight: '700', color: '#A9A9A9'}}>
+              MyTime
+            </Text>
+          </View>
+        </View>
+        <View style={styles.rightSideIconMainViewStyle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ProfilePage')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/profile.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Notification')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 18, width: 18}}
+              source={require('../assets/bell.png')}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Setting')}
+            style={styles.rightSideButtonStyle}>
+            <Image
+              style={{height: 15, width: 15}}
+              source={require('../assets/setting.png')}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <View style={styles.headerTextViewStyle}>
         <View
           style={{
@@ -171,8 +212,8 @@ const styles = StyleSheet.create({
   },
   headerTextViewStyle: {
     marginTop: 58,
-    height: 30,
-    width: 380,
+    //height: 30,
+    width: 352,
     marginLeft: 25,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -192,7 +233,6 @@ const styles = StyleSheet.create({
     width: 351,
   },
   profilePicImage: {
-    marginTop: 30,
     alignItems: 'center',
     height: 318,
     width: 351,
@@ -211,34 +251,42 @@ const styles = StyleSheet.create({
     lineHeight: 19.5,
     color: '#FFFFFF',
   },
-  iconTextIcon: {
+
+  headerMainViewStyle: {
+    height: 50,
+    width: 352,
+    alignSelf: 'center',
     flexDirection: 'row',
+  },
+  headerLeftMainViewStyle: {
+    height: 50,
+    width: 150,
+    flexDirection: 'row',
+  },
+  leftArrowButtonStyle: {
+    height: 50,
+    width: 50,
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  leftIcon: {
-    left: 45,
-    marginTop: 90,
+  mytimeViewStyle: {
+    height: 50,
+    width: 90,
+    justifyContent: 'center',
   },
-  textInput: {
-    marginTop: 90,
+  rightSideIconMainViewStyle: {
+    height: 50,
+    width: 150,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    position: 'absolute',
+    right: 0,
+    flexDirection: 'row',
   },
-  rightIcon: {
-    right: 45,
-    marginTop: 90,
-  },
-  input: {
-    color: 'black',
-    borderColor: '#C1C1C1',
-    borderWidth: 2,
-    width: 350,
-    height: 45,
-    textAlign: 'center',
-    borderRadius: 20,
-  },
-  backIconButtonStyle: {
-    height: 20,
-    width: 20,
-    marginTop: 50,
-    marginLeft: 30,
+  rightSideButtonStyle: {
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
