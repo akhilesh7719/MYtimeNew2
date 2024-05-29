@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   Image,
-  Alert
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -16,6 +16,7 @@ const Login = ({navigation, route}) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [newTT, setNeTT] = useState('');
+  const [userid, setUserId] = useState('');
 
   const [mailError, setMailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -50,47 +51,22 @@ const Login = ({navigation, route}) => {
 
   useEffect(() => {
     getDeviceToken();
-}, []);
+  }, []);
 
   const getDeviceToken = async () => {
     // let token = await massaging().getToken();
     // console.log(token);
   };
 
-  // const postLoginAPI = () => {
-  //   axios
-  //     .post('https://api.mytime.co.in/auth/login', {
-  //       data: {
-  //         //email: mail,
-  //         //password: password,
-  //         email: 'test666@gmail.com',
-  //         password: 'Password@12345',
-  //       },
-  //     })
-  //     .then(async function (response) {
-  //       console.log('@@@@@@@@@@------', response.data.data);
-  //       let TToken = response.data.token;
-  //       let userData= response.data.data
-  //       setNeTT(TToken);
-  //       await AsyncStorage.setItem('TOKEN', TToken);
-  //       navigation.navigate('HomeScreen');
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
-
   const postLoginAPI = async () => {
     const apiUrl = 'https://api.mytime.co.in/auth/login';
     const data = {
       data: {
-        //email: mail,
-        //password: password,
         email: 'test666@gmail.com',
         password: 'Password@12345',
       },
     };
-
+  
     try {
       console.log('jhhghhhg-----------------------', data);
       const response = await fetch(apiUrl, {
@@ -100,16 +76,18 @@ const Login = ({navigation, route}) => {
         },
         body: JSON.stringify(data),
       });
-
+  
       if (response.ok) {
         const responseData = await response.json();
         console.log('Response:===========', responseData);
         alert('Login successfully');
         let TToken = responseData.token;
-        let userData = response.data;
+        let userId = responseData.data.id;
         setNeTT(TToken);
-        await AsyncStorage.setItem('TOKEN', TToken);
-        //navigation.navigate('HomeNavigatorRoutes');
+        await AsyncStorage.setItem('TOKEN', TToken.toString()); // Ensure TToken is a string
+        await AsyncStorage.setItem('USER_ID', userId.toString()); // Ensure userId is a string
+        console.log("@@@@@@ userId loginpage=======", userId)
+
         navigation.navigate('HomeNavigatorRoutes');
       } else {
         const errorData = await response.json();
@@ -121,6 +99,8 @@ const Login = ({navigation, route}) => {
       Alert.alert('Error', 'Something went wrong while setting up the request');
     }
   };
+  
+
   return (
     <View style={styles.view}>
       <View style={styles.welcomeViewStyle}>

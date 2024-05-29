@@ -5,6 +5,9 @@ import {
   PermissionsAndroid,
   StyleSheet,
   Image,
+  TouchableOpacity,
+  Alert,
+  Linking,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import Contacts from 'react-native-contacts';
@@ -44,6 +47,20 @@ const ContactList = () => {
     }
   };
 
+  const sendInviteLink = (contact) => {
+    const inviteLink = 'https://yourapp.com/invite?ref=yourReferralCode'; // Replace with your app's invite link
+    const message = `Hi ${contact.givenName}, check out this cool app! ${inviteLink}`;
+
+    Linking.openURL(`sms:${contact.phoneNumbers[0]?.number}?body=${encodeURIComponent(message)}`)
+      .then(() => {
+        Alert.alert('Success', 'Invitation sent successfully');
+      })
+      .catch(err => {
+        Alert.alert('Error', 'Failed to send invitation');
+        console.log('Error sending SMS:', err);
+      });
+  };
+
   const renderContact = ({item}) => (
     <View style={styles.contactItem}>
       {item.hasThumbnail ? (
@@ -58,13 +75,10 @@ const ContactList = () => {
       )}
       <View style={styles.contactInfo}>
         <Text style={styles.contactName}>{item.displayName}</Text>
-        {/* {item.phoneNumbers.map((phone, index) => (
-          <Text key={index} style={styles.contactNumber}>{phone.number}</Text>
-        ))} */}
       </View>
-      <View style={styles.inviteViewStyle}>
+      <TouchableOpacity style={styles.inviteViewStyle} onPress={() => sendInviteLink(item)}>
         <Text style={styles.inviteTextStyle}>Invite</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 
@@ -120,9 +134,6 @@ const styles = StyleSheet.create({
   contactName: {
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  contactNumber: {
-    fontSize: 16,
   },
   inviteViewStyle: {
     height: 27,

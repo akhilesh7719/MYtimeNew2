@@ -18,6 +18,7 @@ const ProfilePage = ({navigation, route}) => {
   const [picUri, setPicUri] = useState('');
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     getToken();
@@ -26,10 +27,12 @@ const ProfilePage = ({navigation, route}) => {
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
+    let userId = await AsyncStorage.getItem('USER_ID');
+    setUserId(userId);
   };
 
   const handleEditProfileApi = async () => {
-    const url = 'https://api.mytime.co.in/users/1';
+    const url = `https://api.mytime.co.in/users/${userId}`;
     const formData = new FormData();
     formData.append('data[full_name]', fullName);
     formData.append('data[about_us]', aboutUs);

@@ -62,10 +62,13 @@ const Setting = ({onPress}) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TouchableOpacity onPress={()=> navigation.goBack()}
-      style={styles.cross}>
-      <Image  style={{height:15, width:15}}
-      source={require('../assets/cross.png')}/>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={styles.cross}>
+        <Image
+          style={{height: 15, width: 15}}
+          source={require('../assets/cross.png')}
+        />
       </TouchableOpacity>
       <View style={styles.settingViewStyle}>
         <Text style={styles.settingTextStyle}>Settings</Text>
@@ -181,14 +184,14 @@ const styles = StyleSheet.create({
   },
   upperViewStyle: {
     height: 160,
-    width: 400,
-    marginLeft: 29,
+    width: 342,
+    marginLeft: 20,
     marginTop: 20,
     justifyContent: 'space-between',
   },
   notificationViewStyle: {
     height: 50,
-    width: 400,
+    width: 342,
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -206,13 +209,13 @@ const styles = StyleSheet.create({
   },
   togalViewStyle: {
     height: 50,
-    width: 80,
+    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
   },
   toggalImgStyle: {
     height: 20,
-    width: 45,
+    width: 38,
   },
   privacyViewStyle: {
     height: 50,
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
   },
   contactUsViewStyle: {
     height: 60,
-    width: 250,
+    width: 220,
     justifyContent: 'center',
     marginLeft: 60,
     marginTop: 15,
@@ -247,7 +250,7 @@ const styles = StyleSheet.create({
   },
   bottomButtonViewStyle: {
     height: 250,
-    width: 320,
+    width: 300,
     justifyContent: 'space-between',
     alignItems: 'center',
     alignSelf: 'center',
@@ -270,11 +273,11 @@ const styles = StyleSheet.create({
   },
   cross: {
     //backgroundColor:'green',
-   width: 30,
-   height: 22,
-   alignSelf: 'flex-end',
-   justifyContent: 'center',
-   alignItems:'center',
-   marginRight: 20
- },
+    width: 30,
+    height: 22,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
+  },
 });

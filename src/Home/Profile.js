@@ -90,7 +90,7 @@ const Profile = ({navigation, route}) => {
         </View>
         <View style={styles.rightSideIconMainViewStyle}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('ProfilePage')}
+            onPress={() => navigation.navigate('EditProfile')}
             style={styles.rightSideButtonStyle}>
             <Image
               style={{height: 18, width: 18}}
@@ -118,14 +118,14 @@ const Profile = ({navigation, route}) => {
       <View style={styles.headerTextViewStyle}>
         <View
           style={{
-            height: 30,
+            height: 35,
             width: 150,
           }}>
           <Text style={styles.mainText}>{fullName}</Text>
         </View>
         <View
           style={{
-            height: 30,
+            height: 35,
             width: 110,
             marginLeft: 50,
             flexDirection: 'row',
@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerTextViewStyle: {
-    marginTop: 58,
+    marginTop: 20,
     //height: 30,
     width: 352,
     marginLeft: 25,
