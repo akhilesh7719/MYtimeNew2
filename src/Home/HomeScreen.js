@@ -18,8 +18,8 @@ import {TextInput} from 'react-native-gesture-handler';
 
 const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
-  const [postData, showPostData] = useState('');
-  const [postImage, setPostImage] = useState('');
+  const [postData, setPostData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
@@ -35,14 +35,15 @@ const HomeScreen = ({onPress}) => {
       },
     })
       .then(resp => resp.json())
-      .then(function (data) {
+      .then(data => {
         console.log(
           '@@@@@@@@@@ ApiData ==============',
           data.near_me_public_posts,
         );
-        showPostData(data?.near_me_public_posts);
+        setPostData(data?.near_me_public_posts);
+        filterData('button1', data?.near_me_public_posts);
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
       })
       .finally(() => setLoading(false));
@@ -67,6 +68,7 @@ const HomeScreen = ({onPress}) => {
       'hardwareBackPress',
       backAction,
     );
+    return () => backHandler.remove();
   }, []);
 
   const getToken = async () => {
@@ -83,24 +85,55 @@ const HomeScreen = ({onPress}) => {
 
   const handleButtonPress = buttonName => {
     setSelectedButton(buttonName);
+    filterData(buttonName, postData);
+  };
+
+  const filterData = (buttonName, data) => {
+    let filtered;
+    switch (buttonName) {
+      case 'button1':
+        // Show all data
+        filtered = data;
+        break;
+      case 'button2':
+        filtered = data.filter(item => item.category === 'entertainment');
+        break;
+      case 'button3':
+        filtered = data.filter(item => item.category === 'events');
+        break;
+      case 'button4':
+        filtered = data.filter(item => item.category === 'business');
+        break;
+      default:
+        filtered = data;
+        break;
+    }
+    setFilteredData(filtered);
   };
 
   const productItem = item => {
+    const hasVideo = item.video_url !== undefined && item.video_url !== null;
+
     return (
       <View style={styles.ImageMainView}>
         <TouchableOpacity
-          style={{
-            height: 35,
-            width: 150,
-            justifyContent: 'center',
-          }}>
+          style={{height: 35, width: 150, justifyContent: 'center'}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
         </TouchableOpacity>
         <View style={styles.contactListItemNameView}>
-          <Image
-            style={{width: 350, height: 240}}
-            source={{uri: item.images[0]?.url}}
-          />
+          {hasVideo ? (
+            <Video
+              source={{uri: item.video_url}}
+              style={{width: 350, height: 240}}
+              controls={true}
+              resizeMode="cover"
+            />
+          ) : (
+            <Image
+              style={{width: 350, height: 240}}
+              source={{uri: item.images[0]?.url}}
+            />
+          )}
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('Profile', {item: item})}
@@ -108,7 +141,6 @@ const HomeScreen = ({onPress}) => {
           <Text style={styles.contactListItemText}>View Profile</Text>
         </TouchableOpacity>
         <View
-          onPress={() => navigation.navigate('Profile', {item: item})}
           style={{
             height: 40,
             width: 350,
@@ -219,7 +251,7 @@ const HomeScreen = ({onPress}) => {
 
       <View style={styles.contactListView}>
         <FlatList
-          data={postData}
+          data={filteredData}
           renderItem={({item}) => productItem(item)}
           keyExtractor={item => item.id}
         />
@@ -238,6 +270,7 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   MainContainerView: {
     flex: 1,
+    backgroundColor: '#fff',
   },
   headerMainViewStyle: {
     height: 50,
@@ -295,10 +328,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   ImageMainView: {
-    //marginTop: 10,
+    marginTop: 10,
     width: 350,
-    height: 370,
+    height: 350,
     alignSelf: 'center',
+    backgroundColor: '#f2f2f2',
   },
   contactListItemNameView: {
     justifyContent: 'center',
@@ -342,7 +376,7 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 3,
+    borderBottomWidth: 1,
     borderColor: 'black',
   },
   loading: {
