@@ -17,7 +17,7 @@ const EditProfile = ({navigation}) => {
   const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
-  const [profile, setProfile] = useState('');
+  const [profile, setProfile] = useState(null);
 
   const getToken = async () => {
     try {
@@ -52,18 +52,15 @@ const EditProfile = ({navigation}) => {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          token: '',
+          token: token,
           'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
-      console.log(
-        '@@@@@@@@@@ Show Profile data ==============',
-        data.data.full_name,
-      );
-      setFullName(data?.data?.full_name);
-      setAboutUs(data?.data?.about_us);
-      setProfile(data?.data?.profile_image?.url);
+      console.log('@@@@@@@@@@ Show Profile data ==============', data);
+      setFullName(data?.data?.full_name || '');
+      setAboutUs(data?.data?.about_us || '');
+      setProfile(data?.data?.profile_image?.url || null);
     } catch (error) {
       console.error('Error fetching profile data=====', error);
     } finally {
@@ -117,15 +114,75 @@ const EditProfile = ({navigation}) => {
         </View>
       </View>
 
-      <View style={styles.secondContainerNameLocView}>
-        <View style={styles.nameLocView}>
-          <Text style={styles.profileName}>{fullName}</Text>
-        </View>
-        <View style={styles.profilePicTextView}>
-          <View style={styles.profilePicImageView}>
-            <Image style={{height: 243, width: 350}} source={{uri: profile}} />
+      {profile !== null ? (
+        <View style={styles.secondContainerNameLocView}>
+          <View style={styles.nameLocView}>
+            <Text style={styles.profileName}>{fullName}</Text>
           </View>
-          <View style={styles.profilePicIconView}>
+          <View style={styles.profilePicTextView}>
+            <View style={styles.profilePicImageView}>
+              <Image
+                style={{height: 243, width: 350}}
+                source={{uri: profile}}
+              />
+            </View>
+            <View style={styles.profilePicIconView}>
+              <View style={styles.profilePicIcon}>
+                <TouchableOpacity
+                  style={styles.editButtonStyle}
+                  onPress={() => navigation.navigate('ProfilePage')}>
+                  <Image
+                    style={{height: 18, width: 18}}
+                    source={require('../assets/editIcon.png')}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteButtonStyle}>
+                  <Image
+                    style={{height: 18, width: 18}}
+                    source={require('../assets/delete.png')}
+                  />
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.profileAboutView}>
+              <Text style={styles.profileAbout}>{aboutUs}</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              height: 150,
+              width: 352,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 10,
+            }}>
+            <View
+              style={{
+                height: 150,
+                width: 170,
+                backgroundColor: '#dbd9d9',
+              }}></View>
+            <View
+              style={{
+                height: 150,
+                width: 170,
+                backgroundColor: '#dbd9d9',
+              }}></View>
+          </View>
+        </View>
+      ) : (
+        <View>
+          <View style={styles.nameLocView}>
+            <Text style={styles.profileName}>{fullName}</Text>
+          </View>
+
+          <View
+            style={{
+              height: 343,
+              width: 350,
+              backgroundColor: '#dbd9d9',
+              alignSelf: 'center',
+            }}>
             <View style={styles.profilePicIcon}>
               <TouchableOpacity
                 style={styles.editButtonStyle}
@@ -142,27 +199,12 @@ const EditProfile = ({navigation}) => {
                 />
               </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.profileAboutView}>
-            <Text style={styles.profileAbout}>{aboutUs}</Text>
+            <Text style={{textAlign: 'center', marginTop: 130}}>
+              No Profile available
+            </Text>
           </View>
         </View>
-
-        <View
-          style={{
-            height: 150,
-            width: 352,
-            //backgroundColor: 'blue',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginTop: 10,
-          }}>
-          <View
-            style={{height: 150, width: 170, backgroundColor: 'gray'}}></View>
-          <View
-            style={{height: 150, width: 170, backgroundColor: 'gray'}}></View>
-        </View>
-      </View>
+      )}
     </SafeAreaView>
   );
 };
