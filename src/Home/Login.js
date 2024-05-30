@@ -62,10 +62,10 @@ const Login = ({navigation, route}) => {
     const apiUrl = 'https://api.mytime.co.in/auth/login';
     const data = {
       data: {
-        email: mail, 
-        password: password
-        // email: 'test6666@gmail.com',
-        // password: 'Password@123',
+        // email: mail, 
+        // password: password
+        email: 'test6666@gmail.com',
+        password: 'Password@123',
       },
     };
   

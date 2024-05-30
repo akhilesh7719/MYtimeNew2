@@ -8,6 +8,8 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
 import {useNavigation, useFocusEffect} from '@react-navigation/native';
@@ -43,11 +45,28 @@ const HomeScreen = ({onPress}) => {
       .catch(function (error) {
         console.log(error);
       })
-      .finally(() => setLoading(false)); 
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    getToken();
+    const backAction = () => {
+      Alert.alert('Stop', 'Are you sure you want to go back', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'YES',
+          onPress: () => BackHandler.exitApp(),
+        },
+      ]);
+      return true;
+    };
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
   }, []);
 
   const getToken = async () => {
@@ -91,14 +110,12 @@ const HomeScreen = ({onPress}) => {
         <View
           onPress={() => navigation.navigate('Profile', {item: item})}
           style={{
-            height: 60,
+            height: 40,
             width: 350,
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <Text>A small family run business offering freshly mode </Text>
-          <Text>bread, cokes, breakfast rolls sandwiches,Check my </Text>
-          <Text>page for daily updates. serving new palasia indore</Text>
+          <Text>{item.caption}</Text>
         </View>
       </View>
     );
@@ -278,7 +295,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   ImageMainView: {
-    marginTop: 10,
+    //marginTop: 10,
     width: 350,
     height: 370,
     alignSelf: 'center',

@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import ImagePicker from 'react-native-image-crop-picker';
 
 const EditProfile = ({navigation}) => {
-  
   const [token, setToken] = useState(null);
   const [userId, setUserId] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -46,19 +45,22 @@ const EditProfile = ({navigation}) => {
   };
 
   const getShowProfileApiData = async (token, userId) => {
-    console.log("@@@@@@ userId ======", userId);
+    console.log('@@@@@@ userId ======', userId);
     setLoading(true);
     const url = `https://api.mytime.co.in/users/${userId}`;
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          token: token,
+          token: '',
           'Content-Type': 'application/json',
         },
       });
       const data = await response.json();
-      console.log('@@@@@@@@@@ Show Profile data ==============', data.data.full_name);
+      console.log(
+        '@@@@@@@@@@ Show Profile data ==============',
+        data.data.full_name,
+      );
       setFullName(data?.data?.full_name);
       setAboutUs(data?.data?.about_us);
       setProfile(data?.data?.profile_image?.url);
