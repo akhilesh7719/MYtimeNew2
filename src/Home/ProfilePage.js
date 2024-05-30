@@ -12,8 +12,9 @@ import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
+import {useFocusEffect} from '@react-navigation/native';
 
-const ProfilePage = ({navigation, route}) => {
+const ProfilePage = ({navigation}) => {
   const [token, setToken] = useState('');
   const [image, setImage] = useState('');
   const [picUri, setPicUri] = useState('');
@@ -26,10 +27,18 @@ const ProfilePage = ({navigation, route}) => {
     getToken();
   }, []);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      if (token && userId) {
+        getShowProfileApiData();
+      }
+    }, [token, userId])
+  );
+
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
-    let userId = await AsyncStorage.getItem('USER_ID');
+    const userId = await AsyncStorage.getItem('USER_ID');
     setUserId(userId);
   };
 
@@ -39,7 +48,13 @@ const ProfilePage = ({navigation, route}) => {
     const formData = new FormData();
     formData.append('data[full_name]', fullName);
     formData.append('data[about_us]', aboutUs);
-    formData.append('data[profile_image]', picUri);
+    if (picUri) {
+      formData.append('data[profile_image]', {
+        uri: picUri.uri,
+        type: picUri.type,
+        name: picUri.name,
+      });
+    }
 
     try {
       const response = await axios.patch(url, formData, {
@@ -48,10 +63,33 @@ const ProfilePage = ({navigation, route}) => {
           'Content-Type': 'multipart/form-data',
         },
       });
-      console.log('Response:=======', JSON.stringify(response));
+      console.log('Response:', JSON.stringify(response.data));
       navigation.navigate('HomeScreen');
     } catch (error) {
-      console.error('Error:==========', error);
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getShowProfileApiData = async () => {
+    setLoading(true);
+    const url = `https://api.mytime.co.in/users/${userId}`;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          token: token,
+          'Content-Type': 'application/json',
+        },
+      });
+      const data = await response.json();
+      console.log('Show Profile data:', data);
+      setFullName(data?.data?.full_name || '');
+      setAboutUs(data?.data?.about_us || '');
+      setImage(data?.data?.profile_image?.url || null);
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
     } finally {
       setLoading(false);
     }
@@ -64,10 +102,10 @@ const ProfilePage = ({navigation, route}) => {
       cropping: true,
     }).then(image => {
       setImage(image.path);
-      let output = {
+      const output = {
         uri: image.path,
         type: image.mime,
-        name: image.filename,
+        name: image.filename || 'profile.jpg',
       };
       setPicUri(output);
     });
