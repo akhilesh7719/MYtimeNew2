@@ -116,10 +116,10 @@ const HomeScreen = ({onPress}) => {
 
     return (
       <View style={styles.ImageMainView}>
-        <TouchableOpacity
-          style={{height: 35, width: 150, justifyContent: 'center'}}>
+        <View
+          style={{height: 35, width: 150, justifyContent: 'center',}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
-        </TouchableOpacity>
+        </View>
         <View style={styles.contactListItemNameView}>
           {hasVideo ? (
             <Video
@@ -130,7 +130,7 @@ const HomeScreen = ({onPress}) => {
             />
           ) : (
             <Image
-              style={{width: 350, height: 240}}
+              style={{width: 350, height: 360}}
               source={{uri: item.images[0]?.url}}
             />
           )}
@@ -144,10 +144,11 @@ const HomeScreen = ({onPress}) => {
           style={{
             height: 40,
             width: 350,
-            justifyContent: 'center',
-            alignItems: 'center',
+            //justifyContent: 'center',
+            //alignItems: 'center',
+            //backgroundColor:"red"
           }}>
-          <Text>{item.caption}</Text>
+          <Text style={styles.captionTextStyle}>{item.caption}</Text>
         </View>
       </View>
     );
@@ -330,9 +331,9 @@ const styles = StyleSheet.create({
   ImageMainView: {
     marginTop: 10,
     width: 350,
-    height: 350,
+    height: 460,
     alignSelf: 'center',
-    backgroundColor: '#f2f2f2',
+     //backgroundColor: 'red',
   },
   contactListItemNameView: {
     justifyContent: 'center',
@@ -376,8 +377,8 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'black',
+    // borderBottomWidth: 1,
+    // borderColor: 'black',
   },
   loading: {
     position: 'absolute',
@@ -388,4 +389,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  captionTextStyle:{
+    color: '#545454',
+    fontWeight: '400',
+    fontSize: 14,
+    fontFamily: 'poppins',
+  }
 });
