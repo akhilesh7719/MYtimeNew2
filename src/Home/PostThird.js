@@ -1,5 +1,4 @@
 import {
-  FlatList,
   Image,
   SafeAreaView,
   ScrollView,
@@ -8,7 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,7 +23,6 @@ const PostThird = ({navigation, route}) => {
   const [categoriesID, setCtegoriedID] = useState('');
   const [categories, showcategories] = useState([]);
   const [loading, setLoading] = useState(false);
-
 
   useEffect(() => {
     getAllCategories();
@@ -104,8 +102,7 @@ const PostThird = ({navigation, route}) => {
       alert('Post created successfully');
       navigation.navigate('HomeScreen');
     } catch (error) {
-      console.error('Error:==========', error)
-      .finally(() => setLoading(false));
+      console.error('Error:==========', error).finally(() => setLoading(false));
     }
   };
   // const createPostApi = async () => {

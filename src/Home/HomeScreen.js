@@ -12,7 +12,11 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput} from 'react-native-gesture-handler';
 
@@ -23,6 +27,7 @@ const HomeScreen = ({onPress}) => {
   const [loading, setLoading] = useState(false);
   const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
   const getAllShowApiData = async tokens => {
     setLoading(true);
@@ -51,25 +56,30 @@ const HomeScreen = ({onPress}) => {
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Stop', 'Are you sure you want to go back', [
-        {
-          text: 'Cancel',
-          onPress: () => null,
-          style: 'cancel',
-        },
-        {
-          text: 'YES',
-          onPress: () => BackHandler.exitApp(),
-        },
-      ]);
-      return true;
+      if (isFocused) {
+        Alert.alert('Stop', 'Are you sure you want to go back?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'YES',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ]);
+        return true;
+      }
+      return false;
     };
+
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
+
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
@@ -115,8 +125,7 @@ const HomeScreen = ({onPress}) => {
 
     return (
       <View style={styles.ImageMainView}>
-        <View
-          style={{height: 35, width: 150, justifyContent: 'center',}}>
+        <View style={{height: 35, width: 150, justifyContent: 'center'}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
         </View>
         <View style={styles.contactListItemNameView}>
@@ -382,11 +391,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  captionTextStyle:{
+  captionTextStyle: {
     color: '#545454',
     fontWeight: '400',
     fontSize: 14,
     fontFamily: 'poppins',
   },
-  
 });

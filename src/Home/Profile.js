@@ -281,7 +281,7 @@ const styles = StyleSheet.create({
   },
   contactViewStyle: {
     height: 35,
-    width: 130,
+    width: 140,
     marginLeft: 50,
     flexDirection: 'row',
   },
