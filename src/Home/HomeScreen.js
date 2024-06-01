@@ -92,7 +92,6 @@ const HomeScreen = ({onPress}) => {
     let filtered;
     switch (buttonName) {
       case 'button1':
-        // Show all data
         filtered = data;
         break;
       case 'button2':
@@ -144,9 +143,6 @@ const HomeScreen = ({onPress}) => {
           style={{
             height: 40,
             width: 350,
-            //justifyContent: 'center',
-            //alignItems: 'center',
-            //backgroundColor:"red"
           }}>
           <Text style={styles.captionTextStyle}>{item.caption}</Text>
         </View>
@@ -333,7 +329,6 @@ const styles = StyleSheet.create({
     width: 350,
     height: 460,
     alignSelf: 'center',
-     //backgroundColor: 'red',
   },
   contactListItemNameView: {
     justifyContent: 'center',
@@ -377,8 +372,6 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     alignItems: 'center',
-    // borderBottomWidth: 1,
-    // borderColor: 'black',
   },
   loading: {
     position: 'absolute',
@@ -394,5 +387,6 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 14,
     fontFamily: 'poppins',
-  }
+  },
+  
 });

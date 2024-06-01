@@ -173,7 +173,6 @@ const styles = StyleSheet.create({
     width: 250,
     justifyContent: 'center',
     marginLeft: 29,
-    //marginTop: 20,
   },
   settingTextStyle: {
     fontSize: 15,
@@ -266,15 +265,14 @@ const styles = StyleSheet.create({
   },
   deleteTextStyle: {
     fontSize: 12,
-    color: '#000000',
+    color: '#545454',
     fontWeight: '500',
     fontFamily: 'poppins',
     lineHeight: 22.5,
   },
   cross: {
-    //backgroundColor:'green',
     width: 30,
-    height: 22,
+    height: 20,
     alignSelf: 'flex-end',
     justifyContent: 'center',
     alignItems: 'center',
