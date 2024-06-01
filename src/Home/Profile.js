@@ -4,50 +4,26 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Alert,
   Linking,
-  SafeAreaView,
-  ActivityIndicator,
-  FlatList,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {ScrollView} from 'react-native-gesture-handler';
+import Video from 'react-native-video';
 
 const Profile = ({navigation, route}) => {
-  const DATA = [
-    {
-      id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-      title: 'First Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-    {
-      id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-      title: 'Second Item',
-    },
-    {
-      id: '58694a0f-3da1-471f-bd96-145571e29d72',
-      title: 'Third Item',
-    },
-  ];
-
   const phoneNumber = '123-456-7890';
   const [token, setToken] = useState('');
   const [fullName, setFullName] = useState('');
   const [aboutUs, setAboutUs] = useState('');
   const [profileImg, setProfileImg] = useState('');
   const [homeId, setHomeId] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [loading, setLoading] = useState(false);
   const [postData, setPostData] = useState([]);
 
   const handlePress = () => {
-    Linking.openURL(`tel:${mobile}`).catch(err =>
+    Linking.openURL(`tel:${phoneNumber}`).catch(err =>
       console.error('Error opening phone dialer', err),
     );
   };
@@ -71,7 +47,7 @@ const Profile = ({navigation, route}) => {
   }, [token, homeId]);
 
   const viewProfile = async tokens => {
-    setLoading(true);
+    console.log(homeId, '===@@@');
     const url = `https://api.mytime.co.in/users/${homeId}`;
     fetch(url, {
       method: 'GET',
@@ -82,32 +58,21 @@ const Profile = ({navigation, route}) => {
     })
       .then(resp => resp.json())
       .then(function (data) {
-        let fullName = data?.data?.full_name;
-        let aboutUs = data?.data?.about_us;
-        let profilePic = data?.data?.profile_image.url;
-        let mobile = data?.data?.phone_number;
+        let fullName = data.data.full_name;
+        let aboutUs = data.data.about_us;
+        let profilePic = data.data.profile_image.url;
         setFullName(fullName);
         setAboutUs(aboutUs);
         setProfileImg(profilePic);
-        setMobile(mobile);
+        setPostData(data.data.posts);
       })
       .catch(function (error) {
         console.log(error);
-      })
-      .finally(() => setLoading(false));
+      });
   };
 
   const handleGoBack = () => {
     navigation.goBack();
-  };
-
-  const postItemData = item => {
-    console.log('@@@@@@@@item=======', item);
-    return (
-      <View style={styles.flatListMainView}>
-        <Image style={{height: 20, width: 20}} source={{uri: item.url}} />
-      </View>
-    );
   };
 
   return (
@@ -159,43 +124,142 @@ const Profile = ({navigation, route}) => {
         <View
           style={{
             height: 35,
-            width: 120,
+            width: 150,
           }}>
           <Text style={styles.mainText}>{fullName}</Text>
         </View>
-        <View style={styles.contactViewStyle}>
-          <View style={styles.contactImgViewStyle}>
+        <View
+          style={{
+            height: 35,
+            width: 110,
+            marginLeft: 50,
+            flexDirection: 'row',
+          }}>
+          <View
+            style={{
+              height: 30,
+              width: 40,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
             <Image
               style={{height: 18, width: 18}}
-              source={require('../assets/contactwo.png')}
+              source={require('../assets/location.png')}
             />
           </View>
-          <TouchableOpacity onPress={() => handlePress()}>
-            <Text style={styles.mainText}>contact me</Text>
-          </TouchableOpacity>
+          <Text style={styles.mainText}>Indore</Text>
         </View>
       </View>
       <View style={styles.container2}>
         <View style={styles.profilePic}>
           <Image style={styles.profilePicImage} source={{uri: profileImg}} />
-          <View style={styles.aboutViewStyle}>
-            <Text style={styles.profileAbout}>{aboutUs}</Text>
+          <Text style={styles.profileAbout}>
+            A Small Family Run Business Offering Freshly Mode Bread, Cokes,
+            Breakfast Rolls Sandwiches, Check My Page For Daily Updates. Serving
+            New Palasia Indore
+          </Text>
+        </View>
+
+        <View style={styles.headerTextViewStyle}>
+          <View
+            style={{
+              height: 30,
+              width: 110,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                height: 30,
+                width: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{height: 18, width: 18}}
+                source={require('../assets/contactwo.png')}
+              />
+            </View>
+            <TouchableOpacity onPress={() => handlePress()}>
+              <Text style={styles.mainText}>contact me</Text>
+            </TouchableOpacity>
+          </View>
+          <View
+            style={{
+              height: 30,
+              width: 110,
+              flexDirection: 'row',
+            }}>
+            <View
+              style={{
+                height: 30,
+                width: 40,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Image
+                style={{height: 18, width: 18}}
+                source={require('../assets/location.png')}
+              />
+            </View>
+            <Text style={styles.mainText}>Indore</Text>
           </View>
         </View>
       </View>
-      <View style={styles.contactListView}>
-        <FlatList
-          data={postData}
-          numColumns={2}
-          renderItem={({item}) => postItemData(item)}
-          keyExtractor={item => item.id}
-        />
+      <View
+        style={{
+          width: '100%',
+          height: 300,
+          padding: 15,
+        }}>
+        <ScrollView
+          contentContainerStyle={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}>
+          {postData.map((item, index) => {
+            return (
+              <View
+                style={{
+                  width: 170,
+                  height: 170,
+                  marginVertical: 10
+                }}
+                key={index}>
+                <ScrollView horizontal pagingEnabled>
+                  {item.images.map((innerItem,innerIndex) => {
+                    let url = innerItem.url;
+                    let mediaType = url.split('.');
+                    let mediaLength = mediaType.length;
+                    let mediaFormat = mediaType[mediaLength - 1];
+                    return (
+                      <View key={innerIndex}>
+                        {mediaFormat == 'mp4' ? (
+                          <Video
+                            source={{uri: innerItem.url}}
+                            muted={true}
+                            paused={true}
+                            controls={true}
+                            resizeMode="cover"
+                            style={{width: 170, height: 170}}
+                          />
+                        ) : (
+                          <Image
+                            style={{width: 170, height: 170}}
+                            source={{uri: innerItem.url}}
+                            resizeMode="cover"
+                          />
+                        )}
+                      </View>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+            );
+          })}
+        </ScrollView>
       </View>
-      {loading && (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#B8DCF4" />
-        </View>
-      )}
     </SafeAreaView>
   );
 };
@@ -208,6 +272,7 @@ const styles = StyleSheet.create({
   },
   headerTextViewStyle: {
     marginTop: 20,
+    //height: 30,
     width: 352,
     marginLeft: 25,
     flexDirection: 'row',
@@ -221,9 +286,6 @@ const styles = StyleSheet.create({
   },
   container2: {
     alignItems: 'center',
-    height: 230,
-    width: 320,
-    alignSelf: 'center',
   },
   profilePic: {
     alignItems: 'center',
@@ -231,15 +293,23 @@ const styles = StyleSheet.create({
     width: 351,
   },
   profilePicImage: {
-    height: 150,
-    width: 150,
-    borderRadius: 100,
+    alignItems: 'center',
+    height: 318,
+    width: 351,
+    opacity: 100,
   },
   profileAbout: {
+    alignItems: 'center',
+    height: 98,
+    width: 312,
+    marginTop: -80,
+    color: 'black',
+    alignSelf: 'center',
+    textAlign: 'justify',
     fontWeight: '400',
-    fontSize: 18,
+    fontSize: 13,
     lineHeight: 19.5,
-    color: '#515151',
+    color: '#FFFFFF',
   },
 
   headerMainViewStyle: {
@@ -276,47 +346,6 @@ const styles = StyleSheet.create({
   rightSideButtonStyle: {
     height: 30,
     width: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contactViewStyle: {
-    height: 35,
-    width: 140,
-    marginLeft: 50,
-    flexDirection: 'row',
-  },
-  contactImgViewStyle: {
-    height: 35,
-    width: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  aboutViewStyle: {
-    height: 60,
-    marginTop: 10,
-    width: '90%',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  loading: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  contactListView: {
-    width: '100%',
-    alignItems: 'center',
-  },
-  flatListMainView: {
-    height: 120,
-    width: 170,
-    backgroundColor: 'red',
-    marginTop: 5,
-    marginLeft: 5,
     justifyContent: 'center',
     alignItems: 'center',
   },

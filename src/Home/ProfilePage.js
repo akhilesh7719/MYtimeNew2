@@ -7,7 +7,6 @@ import {
   SafeAreaView,
   TextInput,
   ActivityIndicator,
-  Alert, // Import Alert for displaying error messages
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -33,7 +32,7 @@ const ProfilePage = ({navigation}) => {
       if (token && userId) {
         getShowProfileApiData();
       }
-    }, [token, userId]),
+    }, [token, userId])
   );
 
   const getToken = async () => {
@@ -43,19 +42,7 @@ const ProfilePage = ({navigation}) => {
     setUserId(userId);
   };
 
-  const validateFullName = () => {
-    if (fullName.length < 2) {
-      return false;
-    }
-    return true;
-  };
-
   const handleEditProfileApi = async () => {
-    if (!validateFullName(fullName)) {
-      Alert.alert('Invalid Name', 'Please enter a valid full name.');
-      return;
-    }
-
     setLoading(true);
     const url = `https://api.mytime.co.in/users/${userId}`;
     const formData = new FormData();
@@ -129,7 +116,7 @@ const ProfilePage = ({navigation}) => {
       <View style={styles.profilePicViewMainStyle}>
         <View style={styles.profilePicViewInnerStyle}>
           <Image
-            source={{uri: image}}
+            source={image ? {uri: image} : require('../assets/profile.png')}
             style={{height: 135, width: 135, borderRadius: 100}}
           />
         </View>
@@ -161,7 +148,7 @@ const ProfilePage = ({navigation}) => {
       <View style={styles.aboutViewStyle}>
         <TextInput
           style={styles.aboutInputStyle}
-          placeholder={'I am a professional artist'}
+          placeholder={'About Us'}
           placeholderTextColor="#515151"
           multiline={true}
           onChangeText={text => setAboutUs(text)}

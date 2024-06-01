@@ -12,13 +12,10 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
-import {
-  useNavigation,
-  useFocusEffect,
-  useIsFocused,
-} from '@react-navigation/native';
+import {useNavigation, useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput} from 'react-native-gesture-handler';
+import Video from 'react-native-video';
 
 const HomeScreen = ({onPress}) => {
   const [token, setToken] = useState('');
@@ -27,7 +24,8 @@ const HomeScreen = ({onPress}) => {
   const [loading, setLoading] = useState(false);
   const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
-  const isFocused = useIsFocused();
+
+  const [searchText, setSetsearchText] = useState("");
 
   const getAllShowApiData = async tokens => {
     setLoading(true);
@@ -56,30 +54,25 @@ const HomeScreen = ({onPress}) => {
 
   useEffect(() => {
     const backAction = () => {
-      if (isFocused) {
-        Alert.alert('Stop', 'Are you sure you want to go back?', [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          {
-            text: 'YES',
-            onPress: () => BackHandler.exitApp(),
-          },
-        ]);
-        return true;
-      }
-      return false;
+      Alert.alert('Stop', 'Are you sure you want to go back', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'YES',
+          onPress: () => BackHandler.exitApp(),
+        },
+      ]);
+      return true;
     };
-
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
-
     return () => backHandler.remove();
-  }, [isFocused]);
+  }, []);
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
@@ -121,27 +114,45 @@ const HomeScreen = ({onPress}) => {
   };
 
   const productItem = item => {
-    const hasVideo = item.video_url !== undefined && item.video_url !== null;
-
     return (
       <View style={styles.ImageMainView}>
-        <View style={{height: 35, width: 150, justifyContent: 'center'}}>
+        <TouchableOpacity
+          style={{height: 35, width: 150, justifyContent: 'center'}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
-        </View>
+        </TouchableOpacity>
         <View style={styles.contactListItemNameView}>
-          {hasVideo ? (
-            <Video
-              source={{uri: item.video_url}}
-              style={{width: 350, height: 240}}
-              controls={true}
-              resizeMode="cover"
-            />
-          ) : (
-            <Image
-              style={{width: 350, height: 360}}
-              source={{uri: item.images[0]?.url}}
-            />
-          )}
+          <ScrollView
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
+            {item.images.map((item, index) => {
+              let media_url = item.url;
+              let mediaType = media_url.split('.');
+              let mediaLength = mediaType.length;
+              let mediaFormat = mediaType[mediaLength - 1];
+              return (
+                <View key={index} style={styles.mediaContainer}>
+                  {mediaFormat == 'mp4' ? (
+                    <Video
+                      source={{uri: item.url}}
+                      muted={true}
+                      paused={true}
+                      controls={true}
+                      resizeMode="cover"
+                      style={{width: 300, height: 240}}
+                    />
+                  ) : (
+                    <Image
+                      style={{width: 300, height: 240}}
+                      source={{uri: item.url}}
+                      resizeMode="cover"
+                    />
+                  )}
+                </View>
+              );
+            })}
+          </ScrollView>
         </View>
         <TouchableOpacity
           onPress={() => navigation.navigate('Profile', {item: item})}
@@ -152,11 +163,34 @@ const HomeScreen = ({onPress}) => {
           style={{
             height: 40,
             width: 350,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          <Text style={styles.captionTextStyle}>{item.caption}</Text>
+          <Text>{item.caption}</Text>
         </View>
       </View>
     );
+  };
+
+  const getSearchData = async () => {
+    setSetsearchText("");
+    setLoading(true);
+    const url = `https://api.mytime.co.in/posts/search?query=${searchText}`;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        token: token,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        setFilteredData(data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -198,15 +232,19 @@ const HomeScreen = ({onPress}) => {
       </View>
       <View style={styles.serchMainViewStyle}>
         <View style={styles.serchIconViewStyle}>
-          <Image
-            style={{height: 14, width: 12}}
-            source={require('../assets/search.png')}
-          />
+          <TouchableOpacity onPress={getSearchData}>
+            <Image
+              style={{height: 14, width: 12}}
+              source={require('../assets/search.png')}
+            />
+          </TouchableOpacity>
         </View>
         <View style={styles.textInputViewStyle}>
           <TextInput
             style={styles.textInputStyle}
-            placeholder="makeup artist , yoga instructor near me "
+            placeholder="makeup artist, yoga instructor near me"
+            onChangeText={text => setSetsearchText(text)}
+            value={searchText}
           />
         </View>
       </View>
@@ -336,12 +374,23 @@ const styles = StyleSheet.create({
   ImageMainView: {
     marginTop: 10,
     width: 350,
-    height: 460,
+    height: 350,
+    justifyContent: 'center',
     alignSelf: 'center',
+    backgroundColor: '#f2f2f2',
   },
   contactListItemNameView: {
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  scrollContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  mediaContainer: {
+    width: 300,
+    height: 200,
+    marginHorizontal: 10,
   },
   contactListItemText: {
     fontWeight: '400',
@@ -381,6 +430,8 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    borderColor: 'black',
   },
   loading: {
     position: 'absolute',
@@ -390,11 +441,5 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  captionTextStyle: {
-    color: '#545454',
-    fontWeight: '400',
-    fontSize: 14,
-    fontFamily: 'poppins',
   },
 });
