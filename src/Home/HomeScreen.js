@@ -49,7 +49,7 @@ const HomeScreen = ({onPress}) => {
           data.near_me_public_posts,
         );
         setPostData(data?.near_me_public_posts);
-        filterData('button1', data?.near_me_public_posts);
+        setFilteredData(data?.near_me_public_posts);
       })
       .catch(error => {
         console.log(error);
@@ -98,7 +98,7 @@ const HomeScreen = ({onPress}) => {
 
   const handleButtonPress = buttonName => {
     setSelectedButton(buttonName);
-    filterData(buttonName);
+    filterData(buttonName)
   };
 
   const filterData = (category_id) => {
@@ -262,17 +262,17 @@ const HomeScreen = ({onPress}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              selectedButton === 'button1'
+              selectedButton === 1
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
-            onPress={() => handleButtonPress(1)}>
+            onPress={() => getAllShowApiData(token)}>
             <Text style={styles.buttonText}>For you</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
               styles.button,
-              selectedButton === 'button2'
+              selectedButton === 2
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
@@ -282,7 +282,7 @@ const HomeScreen = ({onPress}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              selectedButton === 'button3'
+              selectedButton === 3
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
@@ -292,7 +292,7 @@ const HomeScreen = ({onPress}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              selectedButton === 'button4'
+              selectedButton === 4
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
@@ -302,7 +302,7 @@ const HomeScreen = ({onPress}) => {
           <TouchableOpacity
             style={[
               styles.button,
-              selectedButton === 'button5'
+              selectedButton === 5
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
