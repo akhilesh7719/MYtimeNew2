@@ -12,7 +12,11 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState, useEffect, useCallback} from 'react';
-import {useNavigation, useFocusEffect} from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect,
+  useIsFocused,
+} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput} from 'react-native-gesture-handler';
 import Video from 'react-native-video';
@@ -24,8 +28,9 @@ const HomeScreen = ({onPress}) => {
   const [loading, setLoading] = useState(false);
   const [selectedButton, setSelectedButton] = useState('button1');
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
-  const [searchText, setSetsearchText] = useState("");
+  const [searchText, setSetsearchText] = useState('');
 
   const getAllShowApiData = async tokens => {
     setLoading(true);
@@ -54,25 +59,30 @@ const HomeScreen = ({onPress}) => {
 
   useEffect(() => {
     const backAction = () => {
-      Alert.alert('Stop', 'Are you sure you want to go back', [
-        {
-          text: 'Cancel',
-          onPress: () => null,
-          style: 'cancel',
-        },
-        {
-          text: 'YES',
-          onPress: () => BackHandler.exitApp(),
-        },
-      ]);
-      return true;
+      if (isFocused) {
+        Alert.alert('Stop', 'Are you sure you want to go back?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'YES',
+            onPress: () => BackHandler.exitApp(),
+          },
+        ]);
+        return true;
+      }
+      return false;
     };
+
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       backAction,
     );
+
     return () => backHandler.remove();
-  }, []);
+  }, [isFocused]);
 
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
@@ -116,10 +126,9 @@ const HomeScreen = ({onPress}) => {
   const productItem = item => {
     return (
       <View style={styles.ImageMainView}>
-        <TouchableOpacity
-          style={{height: 35, width: 150, justifyContent: 'center'}}>
+        <View style={{height: 35, width: 120, justifyContent: 'center'}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
-        </TouchableOpacity>
+        </View>
         <View style={styles.contactListItemNameView}>
           <ScrollView
             horizontal
@@ -162,9 +171,10 @@ const HomeScreen = ({onPress}) => {
         <View
           style={{
             height: 40,
-            width: 350,
+            width: 300,
             justifyContent: 'center',
-            alignItems: 'center',
+            //alignItems: 'center',
+            //backgroundColor:"green"
           }}>
           <Text>{item.caption}</Text>
         </View>
@@ -173,7 +183,7 @@ const HomeScreen = ({onPress}) => {
   };
 
   const getSearchData = async () => {
-    setSetsearchText("");
+    setSetsearchText('');
     setLoading(true);
     const url = `https://api.mytime.co.in/posts/search?query=${searchText}`;
     fetch(url, {
@@ -377,7 +387,7 @@ const styles = StyleSheet.create({
     height: 350,
     justifyContent: 'center',
     alignSelf: 'center',
-    backgroundColor: '#f2f2f2',
+    //backgroundColor: 'red',
   },
   contactListItemNameView: {
     justifyContent: 'center',
@@ -430,8 +440,6 @@ const styles = StyleSheet.create({
     width: 350,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'black',
   },
   loading: {
     position: 'absolute',
