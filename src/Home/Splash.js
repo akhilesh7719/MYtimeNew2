@@ -6,24 +6,24 @@ import Geolocation from 'react-native-geolocation-service';
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const Splash = ({navigation}) => {
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     temp();
-  //   }, 2000);
-  // }, []);
+  useEffect(() => {
+    setTimeout(() => {
+      temp();
+    }, 2000);
+  }, []);
 
-  // const temp = async () => {
-  //   let status = await AsyncStorage.getItem('TOKEN');
-  //   //let Tokenstatus = await AsyncStorage.getItem('Token');
+  const temp = async () => {
+    let status = await AsyncStorage.getItem('TOKEN');
+    //let Tokenstatus = await AsyncStorage.getItem('Token');
 
-  //   console.log('Status', status);
+    console.log('Status', status);
 
-  //   if (status != null) {
-  //     navigation.navigate('HomeNavigatorRoutes');
-  //   } else {
-  //     navigation.navigate('Login');
-  //   }
-  // };
+    if (status != null) {
+      navigation.navigate('HomeNavigatorRoutes');
+    } else {
+      navigation.navigate('Login');
+    }
+  };
 
   const [location, setLocation] = useState(null);
   const [permission, setPermission] = useState(null);

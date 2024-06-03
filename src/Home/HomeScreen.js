@@ -98,29 +98,28 @@ const HomeScreen = ({onPress}) => {
 
   const handleButtonPress = buttonName => {
     setSelectedButton(buttonName);
-    filterData(buttonName, postData);
+    filterData(buttonName);
   };
 
-  const filterData = (buttonName, data) => {
-    let filtered;
-    switch (buttonName) {
-      case 'button1':
-        filtered = data;
-        break;
-      case 'button2':
-        filtered = data.filter(item => item.category === 'entertainment');
-        break;
-      case 'button3':
-        filtered = data.filter(item => item.category === 'events');
-        break;
-      case 'button4':
-        filtered = data.filter(item => item.category === 'business');
-        break;
-      default:
-        filtered = data;
-        break;
-    }
-    setFilteredData(filtered);
+  const filterData = (category_id) => {
+    setSetsearchText('');
+    setLoading(true);
+    const url = `https://api.mytime.co.in/posts?category_id=${category_id}`;
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        token: token,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        setFilteredData(data.data);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+      .finally(() => setLoading(false));
   };
 
   const productItem = item => {
@@ -267,7 +266,7 @@ const HomeScreen = ({onPress}) => {
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
-            onPress={() => handleButtonPress('button1')}>
+            onPress={() => handleButtonPress(1)}>
             <Text style={styles.buttonText}>For you</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -277,7 +276,7 @@ const HomeScreen = ({onPress}) => {
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
-            onPress={() => handleButtonPress('button2')}>
+            onPress={() => handleButtonPress(2)}>
             <Text style={styles.buttonText}>Entertainment</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -287,8 +286,8 @@ const HomeScreen = ({onPress}) => {
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
-            onPress={() => handleButtonPress('button3')}>
-            <Text style={styles.buttonText}>Today’s events</Text>
+            onPress={() => handleButtonPress(3)}>
+            <Text style={styles.buttonText}>Food</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[
@@ -297,7 +296,17 @@ const HomeScreen = ({onPress}) => {
                 ? styles.activeButton
                 : styles.inactiveButton,
             ]}
-            onPress={() => handleButtonPress('button4')}>
+            onPress={() => handleButtonPress(4)}>
+            <Text style={styles.buttonText}>Lifestyle</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              selectedButton === 'button5'
+                ? styles.activeButton
+                : styles.inactiveButton,
+            ]}
+            onPress={() => handleButtonPress(5)}>
             <Text style={styles.buttonText}>Business</Text>
           </TouchableOpacity>
         </ScrollView>
