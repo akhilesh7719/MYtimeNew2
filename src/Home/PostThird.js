@@ -8,11 +8,15 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import Video from 'react-native-video';
+import Geolocation from 'react-native-geolocation-service';
+import {check, request, PERMISSIONS, RESULTS} from 'react-native-permissions';
 
 const PostThird = ({navigation, route}) => {
   const [token, setToken] = useState('');
@@ -24,13 +28,14 @@ const PostThird = ({navigation, route}) => {
 
   const [categories, showcategories] = useState([]);
 
+  const [location, setLocation] = useState(null);
+  const [permission, setPermission] = useState(null);
+
   useEffect(() => {
     getAllCategories();
-
-    // console.log("route.params?",route.params)
+    requestLocationPermission();
     getToken();
     if (route.params?.mediaPaths) {
-      console.log('Received media paths:', route.params.mediaPaths);
       setImagePaths(route.params.mediaPaths);
     }
   }, [route.params]);
@@ -38,6 +43,41 @@ const PostThird = ({navigation, route}) => {
   const getToken = async () => {
     const tokens = await AsyncStorage.getItem('TOKEN');
     setToken(tokens);
+  };
+
+  const requestLocationPermission = async () => {
+    const permissionStatus = await request(
+      PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+    );
+    if (Platform.OS === 'ios') {
+      const permissionStatus = await request(
+        PERMISSIONS.IOS.LOCATION_WHEN_IN_USE,
+      );
+      setPermission(permissionStatus);
+      if (permissionStatus === RESULTS.GRANTED) {
+        getCurrentLocation();
+      }
+    } else {
+      const permissionStatus = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+      );
+      setPermission(permissionStatus);
+      if (permissionStatus === PermissionsAndroid.RESULTS.GRANTED) {
+        getCurrentLocation();
+      }
+    }
+  };
+
+  const getCurrentLocation = () => {
+    Geolocation.getCurrentPosition(
+      position => {
+        setLocation(position);
+      },
+      error => {
+        console.log(error.code, error.message);
+      },
+      {enableHighAccuracy: true, timeout: 15000, maximumAge: 10000},
+    );
   };
 
   const handleButtonPress = (button, id) => {
@@ -65,8 +105,33 @@ const PostThird = ({navigation, route}) => {
       });
   };
 
+  const handleEditProfileApi = async () => {
+    const userId = await AsyncStorage.getItem('USER_ID');
+    const url = `https://api.mytime.co.in/users/${userId}`;
+    const formData = new FormData();
+    formData.append(
+      'data[address_attributes][latitude]',
+      location.coords.latitude,
+    );
+    formData.append(
+      'data[address_attributes][longitude]',
+      location.coords.longitude,
+    );
+    try {
+      const response = await axios.patch(url, formData, {
+        headers: {
+          token: token,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      console.log('Response: ===@@@', JSON.stringify(response.data));
+      navigation.navigate('HomeScreen');
+    } catch (error) {
+      console.error('Error:', error);
+    } 
+  };
+
   const createPostApi = async () => {
-    console.log('category.id', categoriesID);
     const url = 'https://api.mytime.co.in/posts';
     const formData = new FormData();
     formData.append('data[caption]', caption);
@@ -74,6 +139,14 @@ const PostThird = ({navigation, route}) => {
 
     formData.append('data[category_id]', categoriesID);
 
+    formData.append(
+      'data[address_attributes][latitude]',
+      location.coords.latitude,
+    );
+    formData.append(
+      'data[address_attributes][longitude]',
+      location.coords.longitude,
+    );
     imagePaths.forEach((path, index) => {
       const isVideo = path.endsWith('.mp4');
       formData.append('data[images][]', {
@@ -82,7 +155,6 @@ const PostThird = ({navigation, route}) => {
         name: `media_${index}.${isVideo ? 'mp4' : 'jpg'}`,
       });
     });
-    console.log('formData@@@', JSON.stringify(formData));
 
     try {
       const response = await fetch(url, {
@@ -97,83 +169,12 @@ const PostThird = ({navigation, route}) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
-      const data = await response.json();
-      console.log('Response:=======', JSON.stringify(data));
+      handleEditProfileApi();
       alert('Post created successfully');
-      navigation.navigate('HomeScreen');
     } catch (error) {
       console.error('Error:==========', error);
     }
   };
-  // const createPostApi = async () => {
-  //   const url = 'https://api.mytime.co.in/posts';
-  //   const formData = new FormData();
-  //   formData.append('data[caption]', caption);
-  //   formData.append('data[status]', 'universal');
-  //   formData.append('data[category_id]', categoriesID);
-
-  //   try {
-  //     for (let i = 0; i < imagePaths.length; i++) {
-  //       const path = imagePaths[i];
-  //       const isVideo = path.endsWith('.mp4');
-
-  //       // Resize images
-  //       if (!isVideo) {
-  //         const resizedImageUri = await ImageResizer.createResizedImage(
-  //           path,
-  //           800, // Width
-  //           600, // Height
-  //           'JPEG', // Format
-  //           80, // Quality
-  //         );
-  //         formData.append('data[images][]', {
-  //           uri: resizedImageUri.uri,
-  //           type: 'image/jpeg',
-  //           name: `media_${i}.jpg`,
-  //         });
-  //       }
-
-  //       // Compress videos
-  //       if (isVideo) {
-  //         const compressedVideoUri = await VideoProcessing.compress(
-  //           path,
-  //           {
-  //             width: 720, // Width
-  //             height: 480, // Height
-  //             bitrateMultiplier: 3, // Bitrate multiplier
-  //             outputFormat: 'mp4', // Output format
-  //           }
-  //         );
-  //         formData.append('data[images][]', {
-  //           uri: compressedVideoUri,
-  //           type: 'video/mp4',
-  //           name: `media_${i}.mp4`,
-  //         });
-  //       }
-  //     }
-
-  //     const response = await fetch(url, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //         token: token,
-  //       },
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       throw new Error(`HTTP error! status: ${response.status}`);
-  //     }
-
-  //     const data = await response.json();
-  //     console.log('Response:=======', JSON.stringify(data));
-  //     alert('Post created successfully');
-  //     navigation.navigate('HomeScreen');
-  //   } catch (error) {
-  //     console.error('Error:==========', error);
-  //   }
-  // };
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView>
@@ -507,4 +508,3 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
-
