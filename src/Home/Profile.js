@@ -131,84 +131,39 @@ const Profile = ({navigation, route}) => {
         <View
           style={{
             height: 35,
-            width: 110,
+            width: 140,
             marginLeft: 50,
             flexDirection: 'row',
           }}>
           <View
             style={{
               height: 30,
-              width: 40,
+              width: 30,
               justifyContent: 'center',
               alignItems: 'center',
             }}>
             <Image
               style={{height: 18, width: 18}}
-              source={require('../assets/location.png')}
+              source={require('../assets/contactwo.png')}
             />
           </View>
-          <Text style={styles.mainText}>Indore</Text>
+          <TouchableOpacity onPress={() => handlePress()}>
+            <Text style={styles.mainText}>contact me</Text>
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.container2}>
         <View style={styles.profilePic}>
           <Image style={styles.profilePicImage} source={{uri: profileImg}} />
-          <Text style={styles.profileAbout}>
-            A Small Family Run Business Offering Freshly Mode Bread, Cokes,
-            Breakfast Rolls Sandwiches, Check My Page For Daily Updates. Serving
-            New Palasia Indore
-          </Text>
-        </View>
-
-        <View style={styles.headerTextViewStyle}>
-          <View
-            style={{
-              height: 30,
-              width: 110,
-              flexDirection: 'row',
-            }}>
-            <View
-              style={{
-                height: 30,
-                width: 30,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{height: 18, width: 18}}
-                source={require('../assets/contactwo.png')}
-              />
-            </View>
-            <TouchableOpacity onPress={() => handlePress()}>
-              <Text style={styles.mainText}>contact me</Text>
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              height: 30,
-              width: 110,
-              flexDirection: 'row',
-            }}>
-            <View
-              style={{
-                height: 30,
-                width: 40,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Image
-                style={{height: 18, width: 18}}
-                source={require('../assets/location.png')}
-              />
-            </View>
-            <Text style={styles.mainText}>Indore</Text>
+          <View style={styles.profileAbout}>
+            <Text style={styles.aboutUsTextStyle}>{aboutUs}</Text>
           </View>
         </View>
       </View>
       <View
         style={{
           width: '100%',
-          height: 300,
+          height: 400,
           padding: 15,
         }}>
         <ScrollView
@@ -224,11 +179,11 @@ const Profile = ({navigation, route}) => {
                 style={{
                   width: 170,
                   height: 170,
-                  marginVertical: 10
+                  marginVertical: 10,
                 }}
                 key={index}>
                 <ScrollView horizontal pagingEnabled>
-                  {item.images.map((innerItem,innerIndex) => {
+                  {item.images.map((innerItem, innerIndex) => {
                     let url = innerItem.url;
                     let mediaType = url.split('.');
                     let mediaLength = mediaType.length;
@@ -282,34 +237,32 @@ const styles = StyleSheet.create({
     color: '#515151',
     fontWeight: '500',
     fontSize: 20,
-    lineHeight: 30,
+  },
+  aboutUsTextStyle: {
+    color: '#515151',
+    fontWeight: '500',
+    fontSize: 20,
   },
   container2: {
     alignItems: 'center',
   },
   profilePic: {
     alignItems: 'center',
-    height: 318,
+    justifyContent: 'center',
+    height: 220,
     width: 351,
   },
   profilePicImage: {
     alignItems: 'center',
-    height: 318,
-    width: 351,
-    opacity: 100,
+    height: 150,
+    width: 150,
+    borderRadius: 100,
   },
   profileAbout: {
-    alignItems: 'center',
-    height: 98,
+    height: 50,
     width: 312,
-    marginTop: -80,
-    color: 'black',
-    alignSelf: 'center',
-    textAlign: 'justify',
-    fontWeight: '400',
-    fontSize: 13,
-    lineHeight: 19.5,
-    color: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   headerMainViewStyle: {
@@ -350,3 +303,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
+

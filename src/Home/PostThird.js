@@ -40,9 +40,8 @@ const PostThird = ({navigation, route}) => {
     setToken(tokens);
   };
 
-  const handleButtonPress = (button,id )=> {
-    
-    setCtegoriedID(id)
+  const handleButtonPress = (button, id) => {
+    setCtegoriedID(id);
     setSelectedButton(button);
   };
   const handleSelect = option => {
@@ -66,16 +65,14 @@ const PostThird = ({navigation, route}) => {
       });
   };
 
- 
-
- const createPostApi = async () => {
-    console.log("category.id",categoriesID)
+  const createPostApi = async () => {
+    console.log('category.id', categoriesID);
     const url = 'https://api.mytime.co.in/posts';
     const formData = new FormData();
     formData.append('data[caption]', caption);
     formData.append('data[status]', 'universal');
 
-    formData.append('data[category_id]',categoriesID)
+    formData.append('data[category_id]', categoriesID);
 
     imagePaths.forEach((path, index) => {
       const isVideo = path.endsWith('.mp4');
@@ -115,12 +112,12 @@ const PostThird = ({navigation, route}) => {
   //   formData.append('data[caption]', caption);
   //   formData.append('data[status]', 'universal');
   //   formData.append('data[category_id]', categoriesID);
-  
+
   //   try {
   //     for (let i = 0; i < imagePaths.length; i++) {
   //       const path = imagePaths[i];
   //       const isVideo = path.endsWith('.mp4');
-  
+
   //       // Resize images
   //       if (!isVideo) {
   //         const resizedImageUri = await ImageResizer.createResizedImage(
@@ -136,7 +133,7 @@ const PostThird = ({navigation, route}) => {
   //           name: `media_${i}.jpg`,
   //         });
   //       }
-  
+
   //       // Compress videos
   //       if (isVideo) {
   //         const compressedVideoUri = await VideoProcessing.compress(
@@ -155,7 +152,7 @@ const PostThird = ({navigation, route}) => {
   //         });
   //       }
   //     }
-  
+
   //     const response = await fetch(url, {
   //       method: 'POST',
   //       headers: {
@@ -164,11 +161,11 @@ const PostThird = ({navigation, route}) => {
   //       },
   //       body: formData,
   //     });
-  
+
   //     if (!response.ok) {
   //       throw new Error(`HTTP error! status: ${response.status}`);
   //     }
-  
+
   //     const data = await response.json();
   //     console.log('Response:=======', JSON.stringify(data));
   //     alert('Post created successfully');
@@ -180,7 +177,9 @@ const PostThird = ({navigation, route}) => {
   return (
     <SafeAreaView style={styles.Container}>
       <ScrollView>
-        <View style={styles.headerContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.headerContainer}>
           <View>
             <Image
               style={{height: 10, width: 10}}
@@ -190,7 +189,7 @@ const PostThird = ({navigation, route}) => {
           <View>
             <Text style={styles.headerText}>New Post</Text>
           </View>
-        </View>
+        </TouchableOpacity>
 
         <View style={styles.mainContainer}>
           <ScrollView
@@ -245,7 +244,9 @@ const PostThird = ({navigation, route}) => {
                         marginHorizontal: 20,
                       },
                     ]}
-                    onPress={() => handleButtonPress(category.name,category.id)}>
+                    onPress={() =>
+                      handleButtonPress(category.name, category.id)
+                    }>
                     <Text
                       style={[
                         styles.ButtonText,
@@ -322,15 +323,13 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   headerContainer: {
-    marginTop: 17,
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    left: 45,
-    width: 82,
-    height: 23,
+    marginTop: 20,
+    marginLeft: 20,
+    width: 90,
+    height: 25,
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor:"red"
   },
   headerText: {
     fontFamily: 'poppins',
@@ -508,3 +507,4 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
+
