@@ -8,28 +8,16 @@ import {
   Alert,
 } from 'react-native';
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-// import massaging from '@react-native-firebase/messaging';
 
-const Login = ({navigation, route}) => {
+const Login = ({navigation}) => {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [newTT, setNeTT] = useState('');
   const [userid, setUserId] = useState('');
 
-  const [mailError, setMailError] = useState(false);
-  const [passwordError, setPasswordError] = useState(false);
-
-  const login = () => {
-    if (!mail || !password) {
-      setMailError(true);
-      setPasswordError(true);
-    } else {
-      setMailError(false);
-      setPasswordError(false);
-    }
-  };
+  const [mailError, setMailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   const validateEmail = email => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -49,28 +37,36 @@ const Login = ({navigation, route}) => {
     }
   };
 
-  useEffect(() => {
-    getDeviceToken();
-  }, []);
-
-  const getDeviceToken = async () => {
-    // let token = await massaging().getToken();
-    // console.log(token);
+  const handlePasswordChange = text => {
+    setPassword(text);
+    if (validatePassword(text)) {
+      setPasswordError('');
+    } else {
+      setPasswordError('Password must be at least 6 characters');
+    }
   };
 
   const postLoginAPI = async () => {
+    if (!validateEmail(mail)) {
+      setMailError('Invalid email address');
+      return;
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError('Password must be at least 6 characters');
+      return;
+    }
+
     const apiUrl = 'https://api.mytime.co.in/auth/login';
     const data = {
       data: {
-        // email: mail, 
-        // password: password
-        email: 'test6666@gmail.com',
-        password: 'Password@123',
+        email: mail,
+        password: password,
       },
     };
-  
+
     try {
-      console.log('jhhghhhg-----------------------', data);
+      console.log('Sending data to API:', data);
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
@@ -78,35 +74,34 @@ const Login = ({navigation, route}) => {
         },
         body: JSON.stringify(data),
       });
-  
+
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Response:===========', responseData);
-        alert('Login successfully');
+        console.log('Response:', responseData);
+        alert('Login successful');
         let TToken = responseData.token;
         let userId = responseData.data.id;
         setNeTT(TToken);
         await AsyncStorage.setItem('TOKEN', TToken.toString()); // Ensure TToken is a string
         await AsyncStorage.setItem('USER_ID', userId.toString()); // Ensure userId is a string
-        console.log("@@@@@@ userId loginpage=======", userId)
+        console.log('@@@@@@ userId loginpage=======', userId);
 
         navigation.navigate('HomeNavigatorRoutes');
       } else {
         const errorData = await response.json();
         console.error('Response error:', errorData);
-        alert('Invalid Email/Phone Number', response.errors);
+        alert('Invalid Email/Phone Number');
       }
     } catch (error) {
       console.error('Error:', error);
       Alert.alert('Error', 'Something went wrong while setting up the request');
     }
   };
-  
 
   return (
     <View style={styles.view}>
       <View style={styles.welcomeViewStyle}>
-        <Text style={styles.welcomeTextStyle}>welcome back </Text>
+        <Text style={styles.welcomeTextStyle}>Welcome back</Text>
       </View>
 
       <View style={styles.inoutMainViewStyle}>
@@ -119,20 +114,15 @@ const Login = ({navigation, route}) => {
           </View>
           <View style={styles.emailTextInputStyle}>
             <TextInput
-              placeholder="Enter your mail address"
+              placeholder="Enter your email address"
               placeholderTextColor={'#A4A1A1'}
-              onChangeText={text => setMail(text)}
+              onChangeText={handleEmailChange}
               value={mail}
               autoCapitalize="none"
             />
           </View>
-          <View style={styles.rigntIconViewStyle}>
-            <Image
-              style={{height: 25, width: 25}}
-              source={require('../assets/check.png')}
-            />
-          </View>
         </View>
+        {mailError ? <Text style={styles.error}>{mailError}</Text> : null}
 
         <View style={styles.passwordViewStyle}>
           <View style={styles.emailIconStyle}>
@@ -145,7 +135,7 @@ const Login = ({navigation, route}) => {
             <TextInput
               placeholder="Enter Password"
               placeholderTextColor={'#A4A1A1'}
-              onChangeText={text => setPassword(text)}
+              onChangeText={handlePasswordChange}
               value={password}
               //secureTextEntry
             />
@@ -157,6 +147,9 @@ const Login = ({navigation, route}) => {
             />
           </View>
         </View>
+        {passwordError ? (
+          <Text style={styles.error}>{passwordError}</Text>
+        ) : null}
         <TouchableOpacity
           onPress={() => navigation.navigate('SendOtpScreen')}
           style={styles.forgotViewStyle}>
@@ -335,5 +328,10 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Poppins',
     fontWeight: '500',
+  },
+  error: {
+    color: 'red',
+    marginTop: 10,
+    marginLeft: 20,
   },
 });
