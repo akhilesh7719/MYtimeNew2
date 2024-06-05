@@ -36,10 +36,14 @@ const ProfilePage = ({navigation}) => {
   );
 
   const getToken = async () => {
-    const tokens = await AsyncStorage.getItem('TOKEN');
-    setToken(tokens);
-    const userId = await AsyncStorage.getItem('USER_ID');
-    setUserId(userId);
+    try {
+      const tokens = await AsyncStorage.getItem('TOKEN');
+      setToken(tokens);
+      const userId = await AsyncStorage.getItem('USER_ID');
+      setUserId(userId);
+    } catch (error) {
+      console.error('Error retrieving token/userId from AsyncStorage:', error);
+    }
   };
 
   const handleEditProfileApi = async () => {
@@ -66,7 +70,7 @@ const ProfilePage = ({navigation}) => {
       console.log('Response:', JSON.stringify(response.data));
       navigation.navigate('HomeScreen');
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error updating profile:', error.response ? error.response.data : error.message);
     } finally {
       setLoading(false);
     }
@@ -108,6 +112,8 @@ const ProfilePage = ({navigation}) => {
         name: image.filename || 'profile.jpg',
       };
       setPicUri(output);
+    }).catch(error => {
+      console.error('Error opening image picker:', error);
     });
   };
 
