@@ -3,58 +3,67 @@ import {
   Text,
   View,
   TextInput,
-  Button,
   TouchableOpacity,
   Image,
+  Alert,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
-import axios from 'axios';
-
-const signUpPostAPI = () => {
-  axios
-    .post('https://api.mytime.co.in/users', {
-      data: {
-        // email: 'test22@yopmail.com',
-        // phone_number: "9988776655",
-        // password: 'Ppppp@1234',
-        email: mail,
-        phone_number: contact,
-        password: password,
-      },
-    })
-    .then(function (response) {
-      console.log(response);
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
+import React, {useState} from 'react';
 
 const SignUp = ({navigation}) => {
   const [mail, setMail] = useState('');
   const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [contactError, setContactError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-  // const signUpPostAPI = () => {
-  //   let res = axios
-  //     .post('https://api.mytime.co.in/users', {
-  //       data: {
-  //         email: mail,
-  //         phone_number: contact,
-  //         password: password,
-  //       },
-  //     })
-  //     .then(function (response) {
-  //       console.log('jdhbfjhjueghfrejdbgfhgf', res);
-  //       if (response.data) {
-  //         navigation.navigate('ProfilePage');
-  //       }
-  //     })
-  //     .catch(function (error) {
-  //       console.log(error);
-  //     });
-  // };
+  const validateEmail = email => {
+    const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return re.test(String(email).toLowerCase());
+  };
+
+  const validateContact = contact => {
+    const re = /^[0-9]{10}$/;
+    return re.test(String(contact));
+  };
+
+  const validatePassword = password => {
+    // Minimum 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+    const re =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return re.test(password);
+  };
+
   const signUpPostAPI = async () => {
+    let valid = true;
+
+    if (!validateEmail(mail)) {
+      setEmailError('Please enter a valid email address.');
+      valid = false;
+    } else {
+      setEmailError('');
+    }
+
+    if (!validateContact(contact)) {
+      setContactError('Please enter a valid 10-digit contact number.');
+      valid = false;
+    } else {
+      setContactError('');
+    }
+
+    if (!validatePassword(password)) {
+      setPasswordError(
+        'Password must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character.',
+      );
+      valid = false;
+    } else {
+      setPasswordError('');
+    }
+
+    if (!valid) {
+      return;
+    }
+
     const apiUrl = 'https://api.mytime.co.in/users';
     const data = {
       data: {
@@ -76,13 +85,12 @@ const SignUp = ({navigation}) => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Response:===========', responseData);
-        alert('Sign successfully');
-        
+        Alert.alert('Success', 'Sign up successful');
         navigation.navigate('ProfilePage');
       } else {
         const errorData = await response.json();
         console.error('Response error:', errorData);
-        alert('Please fill the all field', response.errors);
+        Alert.alert('Error', 'Something went wrong');
       }
     } catch (error) {
       console.error('Error:', error);
@@ -119,6 +127,7 @@ const SignUp = ({navigation}) => {
             />
           </View>
         </View>
+        {emailError ? <Text style={styles.error}>{emailError}</Text> : null}
 
         <View style={styles.contactViewStyle}>
           <View style={styles.emailIconStyle}>
@@ -133,10 +142,13 @@ const SignUp = ({navigation}) => {
               placeholderTextColor={'#A4A1A1'}
               onChangeText={text => setContact(text)}
               value={contact}
-              //autoCapitalize='none'
+              keyboardType="numeric"
             />
           </View>
         </View>
+        {contactError ? (
+          <Text style={styles.error}>{contactError}</Text>
+        ) : null}
 
         <View style={styles.passwordViewStyle}>
           <View style={styles.emailIconStyle}>
@@ -162,16 +174,13 @@ const SignUp = ({navigation}) => {
             />
           </View>
         </View>
-        {/* <TouchableOpacity style={styles.forgotViewStyle}>
-          <Text style={styles.forgot}>Forgot Password?</Text>
-        </TouchableOpacity> */}
+        {passwordError ? (
+          <Text style={styles.error}>{passwordError}</Text>
+        ) : null}
       </View>
 
       <View style={styles.buttonViewStyle}>
-        <TouchableOpacity
-          style={styles.button}
-          //onPress={() => navigation.navigate('ProfilePage')}
-          onPress={() => signUpPostAPI()}>
+        <TouchableOpacity style={styles.button} onPress={signUpPostAPI}>
           <Text style={styles.Login}>Sign Up</Text>
         </TouchableOpacity>
         <View style={styles.orViewStyle}>
@@ -193,19 +202,26 @@ export default SignUp;
 const styles = StyleSheet.create({
   view: {
     flex: 1,
-    //justifyContent:'center',
-    //alignItems:'center',
     backgroundColor: '#FFFFFF',
   },
-  welcome: {
-    width: 190,
-    height: 110,
-    fontFamily: 'poppins',
-    fontWeight: 'bold',
-    fontSize: 42,
-    color: '#646464',
+  createAccountViewStyle: {
+    height: 100,
+    width: 135,
     marginTop: 105,
-    left: 50,
+    marginLeft: 35,
+  },
+  createAccountText: {
+    color: '#646464',
+    fontSize: 32,
+    fontFamily: 'Poppins',
+    fontWeight: '500',
+  },
+  inoutMainViewStyle: {
+    height: 200,
+    width: 330,
+    alignSelf: 'center',
+    marginTop: 60,
+    justifyContent: 'space-around',
   },
   emailViewStyle: {
     width: 324,
@@ -216,22 +232,57 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  input2: {
+  contactViewStyle: {
+    marginTop: 35,
     width: 324,
     height: 45,
-    marginTop: 20,
-    //left:50,
     borderRadius: 20,
     borderColor: '#C1C1C1',
     borderWidth: 2,
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  forgot: {
-    fontSize: 20,
-    fontFamily: 'Open Sans',
-    color: '#A4A1A1',
-    fontWeight: 'bold',
+  passwordViewStyle: {
+    marginTop: 35,
+    width: 324,
+    height: 45,
+    borderRadius: 20,
+    borderColor: '#C1C1C1',
+    borderWidth: 2,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  emailIconStyle: {
+    height: 40,
+    width: 45,
+    marginLeft: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emailTextInputStyle: {
+    height: 40,
+    width: 200,
+    marginLeft: 15,
+    justifyContent: 'center',
+  },
+  contactTextInputStyle: {
+    height: 40,
+    width: 200,
+    marginLeft: 15,
+    justifyContent: 'center',
+  },
+  rigntIconViewStyle: {
+    height: 40,
+    width: 40,
+    marginLeft: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonViewStyle: {
+    height: 200,
+    width: 330,
+    alignSelf: 'center',
+    justifyContent: 'center',
   },
   button: {
     width: 324,
@@ -299,7 +350,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   inoutMainViewStyle: {
-    //backgroundColor: 'red',
     height: 200,
     width: 330,
     alignSelf: 'center',
@@ -330,17 +380,14 @@ const styles = StyleSheet.create({
     marginTop: 40,
     width: 180,
     height: 45,
-    //backgroundColor: 'green',
     alignSelf: 'flex-end',
     alignItems: 'flex-end',
   },
   buttonViewStyle: {
-    //backgroundColor: 'blue',
     height: 200,
     width: 330,
     alignSelf: 'center',
     justifyContent: 'center',
-    //marginTop: 20,
   },
   createAccountViewStyle: {
     height: 100,
@@ -353,5 +400,10 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontFamily: 'Poppins',
     fontWeight: '500',
+  },
+  error: {
+    color: 'red',
+    marginTop: 30,
+    marginLeft: 20,
   },
 });
