@@ -21,9 +21,10 @@ const Profile = ({navigation, route}) => {
   const [profileImg, setProfileImg] = useState('');
   const [homeId, setHomeId] = useState('');
   const [postData, setPostData] = useState([]);
+  const [contact, setContact] = useState('');
 
   const handlePress = () => {
-    Linking.openURL(`tel:${phoneNumber}`).catch(err =>
+    Linking.openURL(`tel:${contact}`).catch(err =>
       console.error('Error opening phone dialer', err),
     );
   };
@@ -58,13 +59,15 @@ const Profile = ({navigation, route}) => {
     })
       .then(resp => resp.json())
       .then(function (data) {
-        let fullName = data.data.full_name;
-        let aboutUs = data.data.about_us;
-        let profilePic = data.data.profile_image.url;
+        let fullName = data?.data?.full_name;
+        let aboutUs = data?.data?.about_us;
+        let profilePic = data?.data?.profile_image?.url;
+        let contactNumber = data?.data?.phone_number
         setFullName(fullName);
         setAboutUs(aboutUs);
         setProfileImg(profilePic);
         setPostData(data.data.posts);
+        setContact(contactNumber)
       })
       .catch(function (error) {
         console.log(error);
@@ -95,7 +98,7 @@ const Profile = ({navigation, route}) => {
         </View>
         <View style={styles.rightSideIconMainViewStyle}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('EditProfile')}
+            onPress={() => navigation.navigate('ProfilePage')}
             style={styles.rightSideButtonStyle}>
             <Image
               style={{height: 18, width: 18}}

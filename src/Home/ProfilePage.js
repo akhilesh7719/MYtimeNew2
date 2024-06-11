@@ -14,7 +14,7 @@ import axios from 'axios';
 import ImagePicker from 'react-native-image-crop-picker';
 import {useFocusEffect} from '@react-navigation/native';
 
-const ProfilePage = ({navigation}) => {
+const ProfilePage = ({navigation, route}) => {
   const [token, setToken] = useState('');
   const [image, setImage] = useState('');
   const [picUri, setPicUri] = useState('');
@@ -22,6 +22,7 @@ const ProfilePage = ({navigation}) => {
   const [aboutUs, setAboutUs] = useState('');
   const [userId, setUserId] = useState('');
   const [loading, setLoading] = useState(false);
+  const [signUpToken, setSignUpToken] = useState('');
 
   useEffect(() => {
     getToken();
@@ -32,14 +33,18 @@ const ProfilePage = ({navigation}) => {
       if (token && userId) {
         getShowProfileApiData();
       }
-    }, [token, userId])
+    }, [token, userId]),
   );
 
   const getToken = async () => {
-    const tokens = await AsyncStorage.getItem('TOKEN');
-    setToken(tokens);
-    const userId = await AsyncStorage.getItem('USER_ID');
-    setUserId(userId);
+    try {
+      const tokens = await AsyncStorage.getItem('TOKEN');
+      setToken(tokens);
+      const userId = await AsyncStorage.getItem('USER_ID');
+      setUserId(userId);
+    } catch (error) {
+      console.error('Error retrieving token/userId from AsyncStorage:', error);
+    }
   };
 
   const handleEditProfileApi = async () => {
@@ -64,9 +69,12 @@ const ProfilePage = ({navigation}) => {
         },
       });
       console.log('Response:', JSON.stringify(response.data));
-      navigation.navigate('HomeScreen');
+      navigation.navigate('HomeNavigatorRoutes');
     } catch (error) {
-      console.error('Error:', error);
+      console.error(
+        'Error updating profile:',
+        error.response ? error.response.data : error.message,
+      );
     } finally {
       setLoading(false);
     }
@@ -100,15 +108,19 @@ const ProfilePage = ({navigation}) => {
       width: 300,
       height: 300,
       cropping: true,
-    }).then(image => {
-      setImage(image.path);
-      const output = {
-        uri: image.path,
-        type: image.mime,
-        name: image.filename || 'profile.jpg',
-      };
-      setPicUri(output);
-    });
+    })
+      .then(image => {
+        setImage(image.path);
+        const output = {
+          uri: image.path,
+          type: image.mime,
+          name: image.filename || 'profile.jpg',
+        };
+        setPicUri(output);
+      })
+      .catch(error => {
+        console.error('Error opening image picker:', error);
+      });
   };
 
   return (

@@ -125,7 +125,7 @@ const HomeScreen = ({onPress}) => {
   const productItem = item => {
     return (
       <View style={styles.ImageMainView}>
-        <View style={{height: 35, width: 120, justifyContent: 'center'}}>
+        <View style={{height: 30, width: 120, justifyContent: 'center'}}>
           <Text style={styles.fullNameTextStyle}>{item.user.full_name}</Text>
         </View>
         <View style={styles.contactListItemNameView}>
@@ -148,11 +148,11 @@ const HomeScreen = ({onPress}) => {
                       paused={true}
                       controls={true}
                       resizeMode="cover"
-                      style={{width: 300, height: 240}}
+                      style={{width: 340, height: 340}}
                     />
                   ) : (
                     <Image
-                      style={{width: 300, height: 240}}
+                      style={{width: 370, height: 360}}
                       source={{uri: item.url}}
                       resizeMode="cover"
                     />
@@ -169,11 +169,11 @@ const HomeScreen = ({onPress}) => {
         </TouchableOpacity>
         <View
           style={{
-            height: 40,
+            height: 30,
             width: 300,
             justifyContent: 'center',
             //alignItems: 'center',
-            //backgroundColor:"green"
+            //backgroundColor:"yellow"
           }}>
           <Text>{item.caption}</Text>
         </View>
@@ -214,7 +214,7 @@ const HomeScreen = ({onPress}) => {
         </View>
         <View style={styles.rightSideIconMainViewStyle}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('EditProfile')}
+            onPress={() => navigation.navigate('ProfilePage')}
             style={styles.rightSideButtonStyle}>
             <Image
               style={{height: 18, width: 18}}
@@ -391,28 +391,33 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   ImageMainView: {
-    marginTop: 10,
-    width: 350,
-    height: 350,
-    justifyContent: 'center',
+    marginTop: 8,
+    width: 380,
+    height: 430,
+    //justifyContent: 'center',
     alignSelf: 'center',
-    //backgroundColor: 'red',
+    //backgroundColor: 'green',
   },
   contactListItemNameView: {
     justifyContent: 'center',
     alignItems: 'center',
+    //backgroundColor:"red",
+    width: 380,
+    height: 360,
+    
   },
   scrollContainer: {
     justifyContent: 'space-between',
     alignItems: 'center',
   },
   mediaContainer: {
-    width: 300,
-    height: 200,
-    marginHorizontal: 10,
+    width: 385,
+    height: 360,
+    marginHorizontal: 5,
   },
   contactListItemText: {
-    fontWeight: '400',
+    fontWeight: '600',
+    color: '#545454',
     fontSize: 16,
     lineHeight: 24,
   },
@@ -428,7 +433,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ccc',
-    marginLeft: 11,
+    marginLeft: 8,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -445,10 +450,11 @@ const styles = StyleSheet.create({
     fontFamily: 'poppins',
   },
   viewProfileContainerStyle: {
-    height: 35,
-    width: 350,
-    justifyContent: 'center',
+    height: 25,
+    width: 370,
+    //justifyContent: 'center',
     alignItems: 'center',
+    //backgroundColor:'yellow'
   },
   loading: {
     position: 'absolute',
