@@ -15,6 +15,7 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [newTT, setNeTT] = useState('');
   const [userid, setUserId] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const [mailError, setMailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -98,6 +99,10 @@ const Login = ({navigation}) => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   return (
     <View style={styles.view}>
       <View style={styles.welcomeViewStyle}>
@@ -137,15 +142,22 @@ const Login = ({navigation}) => {
               placeholderTextColor={'#A4A1A1'}
               onChangeText={handlePasswordChange}
               value={password}
-              //secureTextEntry
+              secureTextEntry={!isPasswordVisible}
+              autoCapitalize="none"
             />
           </View>
-          <View style={styles.rigntIconViewStyle}>
+          <TouchableOpacity
+            style={styles.rigntIconViewStyle}
+            onPress={togglePasswordVisibility}>
             <Image
               style={{height: 25, width: 25}}
-              source={require('../assets/eye.png')}
+              source={
+                isPasswordVisible
+                  ? require('../assets/eye_off.png')
+                  : require('../assets/eye.png')
+              }
             />
-          </View>
+          </TouchableOpacity>
         </View>
         {passwordError ? (
           <Text style={styles.error}>{passwordError}</Text>

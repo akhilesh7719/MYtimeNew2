@@ -26,6 +26,7 @@ import HomeNavigatorRoutes from './src/Home/TabNavigator';
 import ContactList from './src/Home/ContactList';
 import ShowPost from './src/Home/ShowPost';
 import Share from './src/Home/Share'
+import PrivacyPolicy from './src/Home/PrivacyPolicy'
 
 const Stack = createStackNavigator();
 
@@ -151,6 +152,11 @@ const App = () => {
         <Stack.Screen
           name="Share"
           component={Share}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PrivacyPolicy"
+          component={PrivacyPolicy}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

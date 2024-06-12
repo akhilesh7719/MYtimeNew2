@@ -14,6 +14,8 @@ import {useNavigation} from '@react-navigation/native';
 const Setting = ({onPress}) => {
   const [token, setToken] = useState('');
   const navigation = useNavigation();
+  const [toggle, setToggle] = useState(false);
+
 
   useEffect(() => {
     getToken();
@@ -59,6 +61,9 @@ const Setting = ({onPress}) => {
   const handleGoBack = () => {
     navigation.goBack();
   };
+  const handleToggle = () => {
+    setToggle(!toggle);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -74,36 +79,64 @@ const Setting = ({onPress}) => {
         <Text style={styles.settingTextStyle}>Settings</Text>
       </View>
       <View style={styles.upperViewStyle}>
-        <View style={styles.notificationViewStyle}>
-          <View style={styles.roundViewStyle}>
-            <View style={styles.roundViewInnerStyle}></View>
-          </View>
-          <View style={styles.notificationTextViewStyle}>
-            <Text style={styles.notificationTextStyle}>Notification</Text>
-          </View>
-          <View style={styles.togalViewStyle}>
-            <Image
-              style={styles.toggalImgStyle}
-              resizeMode="contain"
-              source={require('../assets/toggals.png')}
+      <View style={styles.notificationViewStyle}>
+      <View style={styles.roundViewStyle}>
+        <View style={styles.roundViewInnerStyle}></View>
+      </View>
+      <View style={styles.notificationTextViewStyle}>
+        <Text style={styles.notificationTextStyle}>contact me</Text>
+      </View>
+      <TouchableOpacity style={styles.toggleViewStyle} onPress={handleToggle}>
+      <Image
+              style={{height: 25, width: 45, resizeMode:'contain'}}
+              source={
+                toggle
+                  ? require('../assets/toggals.png')
+                  : require('../assets/toggal_off.png')
+              }
             />
-          </View>
-        </View>
+      </TouchableOpacity>
+      
+    </View>
+        <View style={styles.notificationViewStyle}>
+      <View style={styles.roundViewStyle}>
+        <View style={styles.roundViewInnerStyle}></View>
+      </View>
+      <TouchableOpacity onPress={()=> navigation.navigate('Notification')}
+       style={styles.notificationTextViewStyle}>
+        <Text style={styles.notificationTextStyle}>Notification</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.toggleViewStyle} onPress={handleToggle}>
+      <Image
+              style={{height: 25, width: 45, resizeMode:'contain'}}
+              source={
+                toggle
+                  ? require('../assets/toggals.png')
+                  : require('../assets/toggal_off.png')
+              }
+            />
+      </TouchableOpacity>
+      
+    </View>
         <View style={styles.notificationViewStyle}>
           <View style={styles.roundViewStyle}>
             <View style={styles.roundViewInnerStyle}></View>
           </View>
-          <View style={styles.notificationTextViewStyle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('PrivacyPolicy')}
+            style={styles.notificationTextViewStyle}>
             <Text style={styles.notificationTextStyle}>Privacy Policy</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.notificationViewStyle}>
           <View style={styles.roundViewStyle}>
             <View style={styles.roundViewInnerStyle}></View>
           </View>
-          <View style={styles.notificationTextViewStyle}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('UpdatePassword')}
+            style={styles.notificationTextViewStyle}>
             <Text style={styles.notificationTextStyle}>Change Password</Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.contactUsViewStyle}>
           <Text style={styles.contactUsTextStyle}>Contact Us</Text>
@@ -259,7 +292,7 @@ const styles = StyleSheet.create({
   deleteButtonStyle: {
     height: 45,
     width: 120,
-    backgroundColor: '#D9D9D9',
+    backgroundColor: '#B9DDF3',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
@@ -280,4 +313,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 20,
   },
+  toggleViewStyle: {
+    padding: 5,
+  },
+  
 });

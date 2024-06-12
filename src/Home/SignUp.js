@@ -20,6 +20,7 @@ const SignUp = ({navigation, route}) => {
   const [passwordError, setPasswordError] = useState('');
   const [loading, setLoading] = useState(false);
   const [newTT, setNeTT] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const validateEmail = email => {
     const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -89,11 +90,14 @@ const SignUp = ({navigation, route}) => {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log('Response:===========', responseData);
+        console.log('Response:===========Signup page=====', responseData);
         Alert.alert('Success', 'Sign up successful');
         let TToken = responseData.token;
+        let userId = responseData.data.id;
+        console.log('Response:===========userId signuop page=====', userId);
         setNeTT(TToken);
         await AsyncStorage.setItem('TOKEN', TToken.toString()); // Ensure TToken is a string
+        await AsyncStorage.setItem('USER_ID', userId.toString()); // Ensure userId is a string
         console.log('@@@@@@ signUpPage=======>>>>>>>>', newTT);
         navigation.navigate('ProfilePage');
       } else {
@@ -112,6 +116,9 @@ const SignUp = ({navigation, route}) => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
   return (
     <View style={styles.view}>
       <View style={styles.createAccountViewStyle}>
@@ -175,16 +182,22 @@ const SignUp = ({navigation, route}) => {
               placeholderTextColor={'#A4A1A1'}
               onChangeText={text => setPassword(text)}
               value={password}
-              secureTextEntry
+              secureTextEntry={!isPasswordVisible}
               autoCapitalize="none"
             />
           </View>
-          <View style={styles.rigntIconViewStyle}>
+          <TouchableOpacity
+            style={styles.rigntIconViewStyle}
+            onPress={togglePasswordVisibility}>
             <Image
               style={{height: 25, width: 25}}
-              source={require('../assets/eye.png')}
+              source={
+                isPasswordVisible
+                  ? require('../assets/eye_off.png')
+                  : require('../assets/eye.png')
+              }
             />
-          </View>
+          </TouchableOpacity>
         </View>
         {passwordError ? (
           <Text style={styles.error}>{passwordError}</Text>
